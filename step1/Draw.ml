@@ -11,7 +11,7 @@
 let print_maze maze hight width =
   let in_extrem = function
     | Case.Wall -> "===="
-    | Case.Door -> "|  |"
+    | Case.Door -> "=  ="
   in
   let in_middle = function
     | (Case.Wall, Case.Door) -> "|   "
