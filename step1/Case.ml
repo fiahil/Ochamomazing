@@ -21,6 +21,9 @@ let numberSides = 4
 let color c =
   c.color
 
+let set_color {color = c; sides = si} col =
+  {color = col; sides = si}
+
 let statement {color = col ; sides = (n, s, e, w)} =
   function
     | 0 -> n

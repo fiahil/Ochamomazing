@@ -18,6 +18,7 @@ type case =
 
 val numberSides : int
 val color : case -> int
+val set_color : case -> int -> case
 val statement : case -> int -> elt
 val create : int -> case
 val set_side : case -> elt -> int -> case
