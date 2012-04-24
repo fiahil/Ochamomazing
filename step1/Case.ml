@@ -38,7 +38,5 @@ let set_case_side {color = col ; sides = (n, s, e, w)} elt_Type =
     | 3 -> {color = col ; sides = (n, s, e, elt_Type)}
     | _ -> failwith "A case have only 4 sides"
 
-
-
 let create col =
   {color = col; sides = (Wall, Wall, Wall, Wall)}

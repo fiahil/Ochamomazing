@@ -6,4 +6,4 @@
  *
  *)
 
-val print_maze : maze -> int -> int -> unit
+val print_maze : Maze.maze -> int -> int -> unit
