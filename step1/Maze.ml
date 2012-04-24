@@ -8,15 +8,12 @@
 
 type maze = Case.case array array
 
-(* random init a virer *)
-let _ = Random.self_init ()
-
 let create width high = (* gestion d'erreur sur la taille *)
   let rec create_line line value = function
     | -1 -> line
-    | n ->
+    | n  ->
       begin
-        Array.set line n (Case.create value); (*changer pour un Case.create*)
+        Array.set line n (Case.create value);
         create_line line (value + 1) (n - 1)
       end
   in
@@ -45,103 +42,75 @@ let colorize maze width high =
 
   let inverse_tuple (x, y) = (-x, -y) in
 
-  let get_rand_case rand =
-    (rand * (Random.int high) mod high, rand * (Random.int width) mod width)  (* trouver comment randomiser en un appel *)
+  let get_rand_case () =
+    (Random.int high, Random.int width)
   in
 
-  let get_rand_dir rand =
-    match (rand * (Random.int 4) mod 4) with
+  let get_rand_dir () =
+    match (Random.int 4) with
       | 0 -> (0, 1)
       | 1 -> (1, 0)
       | 2 -> (0, -1)
       | _ -> (-1, 0)
   in
 
-  let check_position (x, y) (dirx, diry) =
-    x > dirx && y > diry && x < width + dirx && y < high + diry
+  let check_position (x, y) =
+    x > -1 && y > -1 && x < high && y < width
   in
 
   let add_tuple (x1, y1) (x2, y2) = (x1 + x2, y1 + y2) in
 
+  let change_case_by_color color new_color =
+    let rec change_columns x =
+      function
+        | -1 -> ()
+        | y  ->
+          if (Case.color (get_case_at_pos maze (x, y)) == color)
+          then
+            begin
+              Array.set maze.(x) y (Case.set_color (get_case_at_pos maze (x, y)) new_color);
+              change_columns x (y - 1)
+            end
+          else
+            change_columns x (y - 1)
+    in
+
+    let rec change_lines =
+      function
+        | -1 -> ()
+        | x  ->
+          begin
+            change_columns x (width - 1);
+            change_lines (x - 1)
+          end
+    in
+    change_lines (high - 1)
+  in
+
   let change_case case dir =
 
     let change_wall case = function
-      | (0, -1) -> Case.set_side case Case.Door 0
-      | (0, 1)  -> Case.set_side case Case.Door 1
-      | (1, 0)  -> Case.set_side case Case.Door 2
-      | (-1, 0) -> Case.set_side case Case.Door 3
-      | _       -> failwith "Invalide direction tuple"
+      | (1, 0) -> Case.set_side case Case.Door 0
+      | (-1, 0)  -> Case.set_side case Case.Door 1
+      | (0, -1)  -> Case.set_side case Case.Door 2
+      | (0, 1) -> Case.set_side case Case.Door 3
+      | _       -> failwith "Invalid direction tuple"
     in
-    Printf.printf "%d %d\n" (get_first (add_tuple dir case)) (get_second (add_tuple dir case));
-    if (check_position (add_tuple dir case) (inverse_tuple dir) && check_position case dir && Case.color (get_case_at_pos maze case) != Case.color (get_case_at_pos maze (add_tuple dir case)))
+    if (check_position (add_tuple dir case) && Case.color (get_case_at_pos maze case) != Case.color (get_case_at_pos maze (add_tuple dir case)))
     then
       begin
         Array.set maze.(get_first (add_tuple dir case)) (get_second (add_tuple dir case)) (change_wall (get_case_at_pos maze (add_tuple dir case)) (inverse_tuple dir));  (* vraiment tres moche *)
         Array.set maze.(get_first case) (get_second case) (change_wall (get_case_at_pos maze case) dir);
+        change_case_by_color (Case.color (get_case_at_pos maze (add_tuple dir case))) (Case.color (get_case_at_pos maze case)); (* prendre la color min *)
         1
       end
     else
-      begin
-        Printf.printf "Don't\n";
-        0
-      end
+      0
   in
 
   let rec change_cases = function
     | 0 -> ()
-    | n ->
-      begin
-        Printf.printf "Un tour %d\n" n;
-        change_cases (n - change_case (get_rand_case (Random.int 100)) (get_rand_dir (Random.int 100)))
-      end
+    | n -> change_cases (n - (change_case (get_rand_case ()) (get_rand_dir ())))
   in
-
-  change_cases (width * high);
+  change_cases (width * high - 1);
   maze
-
-let maze = create 10 10;;
-
-let _ = colorize maze 10 10;;
-
-let print_tmp maze width high =
-  let print_line x =
-    let rec print_l x = function
-      | 0 -> ()
-      | y ->
-        begin
-          let case = get_case_at_pos maze (x, y) in
-          if Case.statement case 1 = Case.Wall then Printf.printf "_" else Printf.printf " ";
-          if Case.statement case 2 = Case.Wall then Printf.printf "|" else Printf.printf " ";
-          print_l x (y - 1)
-        end
-    in
-    let case = get_case_at_pos maze (x, 0) in
-    if Case.statement case 3 = Case.Wall then Printf.printf "|" else Printf.printf " ";
-    print_l x (width - 1);
-    Printf.printf "\n"
-  in
-
-  let rec print_c = function
-    | 0 -> ()
-    | n ->
-      begin
-        print_line n;
-        print_c (n - 1)
-      end
-  in
-
-  let rec print_first_line = function
-    | 0 -> ()
-    | y ->
-      begin
-        let case = get_case_at_pos maze (0, y) in
-        Printf.printf " ";
-        if Case.statement case 0 = Case.Wall then Printf.printf "_" else Printf.printf " ";
-        print_first_line (y - 1)
-      end
-  in
-  print_first_line (width - 1);
-  Printf.printf "\n";
-  print_c (high - 1)
-
-let _ = print_tmp maze 10 10;;
