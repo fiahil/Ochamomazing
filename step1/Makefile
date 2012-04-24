@@ -10,17 +10,11 @@ NAME	=	step1
 ML	=	Case.ml		\
 		Maze.ml		\
 		Draw.ml		\
-		Display.ml	\
 		main.ml
 
 MLI	=	Case.mli	\
 		Maze.mli	\
-		Display.mli	\
 		Draw.mli
-
-INCDIRS	=+	sdl
-
-LIBS	=	bigarray sdl
 
 CMO	=	$(ML:.ml=.cmo)
 
