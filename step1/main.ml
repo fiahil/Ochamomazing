@@ -21,4 +21,5 @@ let main () =
   else
     prerr_endline "Bad arguments X & Y must be > 0"
 
+let _ = Random.self_init ()
 let _ = main ()

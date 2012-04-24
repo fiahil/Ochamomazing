@@ -8,9 +8,6 @@
 
 type maze = Case.case array array
 
-(* initialisation du random *)
-let _ = Random.self_init ()
-
 let create width high = (* gestion d'erreur sur la taille *)
   let rec create_line line value = function
     | -1 -> line
