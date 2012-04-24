@@ -10,14 +10,14 @@
 
 let print_maze maze hight width =
   let in_extrem = function
-    | Wall -> "######"
-    | Door -> "##  ##"
+    | Case.Wall -> "######"
+    | Case.Door -> "##  ##"
   in
   let in_middle = function
-    | (Wall, Door) -> "##    "
-    | (Wall, Wall) -> "##  ##"
-    | (Door, Wall) -> "    ##"
-    | (Door, Door) -> "      "
+    | (Case.Wall, Case.Door) -> "##    "
+    | (Case.Wall, Case.Wall) -> "##  ##"
+    | (Case.Door, Case.Wall) -> "    ##"
+    | (Case.Door, Case.Door) -> "      "
   in
   let in_concat c (top, middle, back) =
     (
