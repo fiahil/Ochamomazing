@@ -8,7 +8,6 @@
 
 type elt =
   | Wall
-  | Border
   | Door
 
 type case =

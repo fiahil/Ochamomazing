@@ -21,16 +21,16 @@ let print_maze maze hight width =
   in
   let in_concat c (top, middle, back) =
     (
-      top ^ (in_extrem (Case.statement c, 0)),
-      middle ^ (in_middle ((Case.statement c, 3), (Case.statement c, 2))),
-      back ^ (in_extrem (Case.statement c, 1))
+      top ^ (in_extrem (Case.statement c 0)),
+      middle ^ (in_middle ((Case.statement c 3), (Case.statement c 2))),
+      back ^ (in_extrem (Case.statement c 1))
     )
   in
   let rec print_line maze width col row (top, middle, back) =
     function
       | false ->
-        maze width (col + 1) row
-          (in_concat (Maze.get_case_at_pos col row) (top, middle, back))
+	print_line maze width (col + 1) row
+          (in_concat (Maze.get_case_at_pos maze (col, row)) (top, middle, back))
           (width = (col + 1))
       | _     ->
         begin

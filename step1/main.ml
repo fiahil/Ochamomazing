@@ -17,7 +17,7 @@ let main () =
   let _ = Arg.parse [] (selectDim) "usage: X Y"
   in
   if !len > 0 && !hig > 0 then
-    print_endline "POIL"
+    Draw.print_maze (Maze.create !len !hig) !len !hig
   else
     prerr_endline "Bad arguments X & Y must be > 0"
 

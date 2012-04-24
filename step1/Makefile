@@ -7,14 +7,14 @@
 
 NAME	=	step1
 
-ML	=	main.ml		\
-		Case.ml		\
+ML	=	Case.ml		\
+		Maze.ml		\
 		Draw.ml		\
-		Maze.ml
+		main.ml
 
 MLI	=	Case.mli	\
-		Draw.mli	\
-		Maze.mli
+		Maze.mli	\
+		Draw.mli
 
 MLL	=	lexer.mll
 
