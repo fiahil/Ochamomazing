@@ -22,10 +22,6 @@ INCDIRS	=+	sdl
 
 LIBS	=	bigarray sdl
 
-MLL	=	lexer.mll
-
-MLY	=	parser.mly
-
 CMO	=	$(ML:.ml=.cmo)
 
 CMI	=	$(MLI:.mli=.cmi)
@@ -45,7 +41,7 @@ CC	=	ocamlopt
 %.cmi: %.mli
 	$(CC) -o $@	-c $< $(FLAGS)
 
-all:	.dep $(CML) $(CMY) $(CMI) $(NAME)
+all:	.dep $(CMI) $(NAME)
 
 $(NAME):	$(CMX)
 	$(CC) -o $(NAME) $(CMX)
