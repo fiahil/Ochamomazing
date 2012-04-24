@@ -10,31 +10,39 @@
 
 let print_maze maze hight width =
   let in_extrem = function
-    | Case.Wall -> "######"
-    | Case.Door -> "##  ##"
+    | Case.Wall -> "####"
+    | Case.Door -> "#  #"
   in
   let in_middle = function
-    | (Case.Wall, Case.Door) -> "##    "
-    | (Case.Wall, Case.Wall) -> "##  ##"
-    | (Case.Door, Case.Wall) -> "    ##"
-    | (Case.Door, Case.Door) -> "      "
+    | (Case.Wall, Case.Door) -> "#   "
+    | (Case.Wall, Case.Wall) -> "#  #"
+    | (Case.Door, Case.Wall) -> "   #"
+    | (Case.Door, Case.Door) -> "    "
   in
-  let in_concat c (top, middle, back) =
-    (
-      top ^ (in_extrem (Case.statement c 0)),
-      middle ^ (in_middle ((Case.statement c 3), (Case.statement c 2))),
-      back ^ (in_extrem (Case.statement c 1))
-    )
+  let in_concat c (top, middle, back) = function
+    | 0 ->
+      (
+	top ^ (in_extrem (Case.statement c 0)),
+	middle ^ (in_middle ((Case.statement c 3), (Case.statement c 2))),
+	back ^ (in_extrem (Case.statement c 1))
+      )
+    | _ ->
+      (
+	top,
+	middle ^ (in_middle ((Case.statement c 3), (Case.statement c 2))),
+	back ^ (in_extrem (Case.statement c 1))
+      )
   in
   let rec print_line maze width col row (top, middle, back) =
     function
       | false ->
 	print_line maze width (col + 1) row
-          (in_concat (Maze.get_case_at_pos maze (col, row)) (top, middle, back))
+          (in_concat (Maze.get_case_at_pos maze (col, row)) (top, middle, back) row)
           (width = (col + 1))
       | _     ->
         begin
-          print_endline top;
+	  if (row = 0) then
+	    print_endline top;
           print_endline middle;
           print_endline back
         end
