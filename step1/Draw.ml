@@ -6,7 +6,7 @@
  *
  *)
 
-(** Maze.get_case_at_pos : int -> int -> case **)
+(* Maze.get_case_at_pos : int -> int -> case *)
 
 let print_maze maze hight width =
   let in_extrem = function
