@@ -73,7 +73,7 @@ let colorize maze width high =
       | _       -> failwith "Invalide direction tuple"
     in
     Printf.printf "%d %d\n" (get_first (add_tuple dir case)) (get_second (add_tuple dir case));
-    if (check_position (add_tuple dir case) (inverse_tuple dir) && check_position case dir && Case.color_of_case (get_case_at_pos maze case) != Case.color_of_case (get_case_at_pos maze (add_tuple dir case)))
+    if (check_position (add_tuple dir case) (inverse_tuple dir) && check_position case dir && Case.color (get_case_at_pos maze case) != Case.color (get_case_at_pos maze (add_tuple dir case)))
     then
       begin
         Array.set maze.(get_first (add_tuple dir case)) (get_second (add_tuple dir case)) (change_wall (get_case_at_pos maze (add_tuple dir case)) (inverse_tuple dir));  (* vraiment tres moche *)
@@ -110,13 +110,13 @@ let print_tmp maze width high =
       | y ->
         begin
           let case = get_case_at_pos maze (x, y) in
-          if Case.statement_of_case case 1 = Case.Wall then Printf.printf "_" else Printf.printf " ";
-          if Case.statement_of_case case 2 = Case.Wall then Printf.printf "|" else Printf.printf " ";
+          if Case.statement case 1 = Case.Wall then Printf.printf "_" else Printf.printf " ";
+          if Case.statement case 2 = Case.Wall then Printf.printf "|" else Printf.printf " ";
           print_l x (y - 1)
         end
     in
     let case = get_case_at_pos maze (x, 0) in
-    if Case.statement_of_case case 3 = Case.Wall then Printf.printf "|" else Printf.printf " ";
+    if Case.statement case 3 = Case.Wall then Printf.printf "|" else Printf.printf " ";
     print_l x (width - 1);
     Printf.printf "\n"
   in
@@ -136,7 +136,7 @@ let print_tmp maze width high =
       begin
         let case = get_case_at_pos maze (0, y) in
         Printf.printf " ";
-        if Case.statement_of_case case 0 = Case.Wall then Printf.printf "_" else Printf.printf " ";
+        if Case.statement case 0 = Case.Wall then Printf.printf "_" else Printf.printf " ";
         print_first_line (y - 1)
       end
   in

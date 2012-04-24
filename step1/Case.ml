@@ -30,7 +30,7 @@ let statement {color = col ; sides = (n, s, e, w)} =
     | 3 -> w
     | _ -> failwith "A case have only 4 sides"
 
-let set_case_side {color = col ; sides = (n, s, e, w)} elt_Type =
+let set_side {color = col ; sides = (n, s, e, w)} elt_Type =
   function
     | 0 -> {color = col ; sides = (elt_Type, s, e, w)}
     | 1 -> {color = col ; sides = (n, elt_Type, e, w)}

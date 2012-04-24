@@ -21,4 +21,4 @@ val numberSides : int
 val color : case -> int
 val statement : case -> int -> elt
 val create : int -> case
-val set_case_side : case -> elt -> int -> case
+val set_side : case -> elt -> int -> case

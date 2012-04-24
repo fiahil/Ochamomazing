@@ -6,7 +6,7 @@
  *
  *)
 
-(** Maze.get_case_at_pos : int -> int -> case **)
+(* Maze.get_case_at_pos : int -> int -> case *)
 
 let print_maze maze hight width =
   let in_extrem = function
@@ -29,23 +29,23 @@ let print_maze maze hight width =
   let rec print_line maze width col row (top, middle, back) =
     function
       | false ->
-	maze width (col + 1) row
-	  (in_concat (Maze.get_case_at_pos col row) (top, middle, back))
-	  (width = (col + 1))
+        maze width (col + 1) row
+          (in_concat (Maze.get_case_at_pos col row) (top, middle, back))
+          (width = (col + 1))
       | _     ->
-	begin
-	  print_endline top;
-	  print_endline middle;
-	  print_endline back
-	end
+        begin
+          print_endline top;
+          print_endline middle;
+          print_endline back
+        end
   in
   let rec in_print_maze maze hight width row =
     function
       | false ->
-	begin
-	  print_line maze width 0 row ("", "", "") (width = 0);
-	  in_print_maze maze hight width (row + 1) (hight = (row + 1))
-	end
+        begin
+          print_line maze width 0 row ("", "", "") (width = 0);
+          in_print_maze maze hight width (row + 1) (hight = (row + 1))
+        end
       | _     -> ()
   in
   in_print_maze maze hight width 0 (hight = 0)
