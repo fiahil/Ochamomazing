@@ -5,7 +5,7 @@
 ## Fri Mar 16 2012
 ##
 
-NAME	=	step1
+NAME	=	step4
 
 ML	=	main.ml		\
 		Case.ml		\
