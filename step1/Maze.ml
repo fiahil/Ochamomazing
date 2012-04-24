@@ -66,10 +66,10 @@ let colorize maze width high =
   let change_case case dir =
 
     let change_wall case = function
-      | (0, -1) -> Case.set_case_side case Case.Door 0
-      | (0, 1)  -> Case.set_case_side case Case.Door 1
-      | (1, 0)  -> Case.set_case_side case Case.Door 2
-      | (-1, 0) -> Case.set_case_side case Case.Door 3
+      | (0, -1) -> Case.set_side case Case.Door 0
+      | (0, 1)  -> Case.set_side case Case.Door 1
+      | (1, 0)  -> Case.set_side case Case.Door 2
+      | (-1, 0) -> Case.set_side case Case.Door 3
       | _       -> failwith "Invalide direction tuple"
     in
     Printf.printf "%d %d\n" (get_first (add_tuple dir case)) (get_second (add_tuple dir case));
