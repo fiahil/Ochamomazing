@@ -6,55 +6,169 @@
  *
  *)
 
-(* Maze.get_case_at_pos : int -> int -> case *)
+let print_maze maze width high =
+  let print_line x =
+    let rec print_l x =
+      function
+	| -1	-> ()
+	| y	->
+          begin
+            let case = Maze.get_case_at_pos maze (x, y)
+	    in
 
-let print_maze maze hight width =
-  let in_extrem = function
-    | Case.Wall -> "===="
-    | Case.Door -> "=  ="
+	    if Case.statement case 1 = Case.Wall then
+	      Printf.printf "_"
+	    else
+	      Printf.printf " ";
+            if Case.statement case 2 = Case.Wall then
+	      Printf.printf "|"
+	    else
+	      Printf.printf " ";
+            print_l x (y - 1)
+          end
+    in
+
+    let case = Maze.get_case_at_pos maze (x, width - 1)
+    in
+
+    if Case.statement case 3 = Case.Wall then
+      Printf.printf "|"
+    else
+      Printf.printf " ";
+    print_l x (width - 1);
+    Printf.printf "\n"
   in
-  let in_middle = function
-    | (Case.Wall, Case.Door) -> "|   "
-    | (Case.Wall, Case.Wall) -> "|  |"
-    | (Case.Door, Case.Wall) -> "   |"
-    | (Case.Door, Case.Door) -> "    "
-  in
-  let in_concat c (top, middle, back) = function
-    | 0 ->
-      (
-	top ^ (in_extrem (Case.statement c 0)),
-	middle ^ (in_middle ((Case.statement c 3), (Case.statement c 2))),
-	back ^ (in_extrem (Case.statement c 1))
-      )
-    | _ ->
-      (
-	top,
-	middle ^ (in_middle ((Case.statement c 3), (Case.statement c 2))),
-	back ^ (in_extrem (Case.statement c 1))
-      )
-  in
-  let rec print_line maze width col row (top, middle, back) =
+
+  let rec print_c =
     function
-      | false ->
-	print_line maze width (col + 1) row
-          (in_concat (Maze.get_case_at_pos maze (col, row)) (top, middle, back) row)
-          (width = (col + 1))
-      | _     ->
-        begin
-	  if (row = 0) then
-	    print_endline top;
-          print_endline middle;
-          print_endline back
-        end
+      | -1	-> ()
+      | n	->
+	begin
+          print_line n;
+          print_c (n - 1)
+	end
   in
-  let rec in_print_maze maze hight width row =
+
+  let rec print_first_line =
     function
-      | false ->
-        begin
-          print_line maze width 0 row ("", "", "") (width = 0);
-          in_print_maze maze hight width (row + 1) (hight = (row + 1))
-        end
-      | _     -> ()
+      | -1	-> ()
+      | y	->
+	begin
+          let case = Maze.get_case_at_pos maze (high - 1, y)
+	  in
+
+          Printf.printf " ";
+          if Case.statement case 0 = Case.Wall then
+	    Printf.printf "_"
+	  else
+	    Printf.printf " ";
+          print_first_line (y - 1)
+	end
   in
-  in_print_maze maze hight width 0 (hight = 0)
-;;
+
+  print_first_line (width - 1);
+  Printf.printf "\n";
+  print_c (high - 1)
+
+(* End of print_maze *)
+
+let print_maze_numbers maze width high =
+  let print_line x =
+    let rec print_l x =
+      function
+	| -1	-> ()
+	| y	->
+          begin
+            let case = Maze.get_case_at_pos maze (x, y) in
+            Printf.printf "%2d " (Case.color case);
+            print_l x (y - 1)
+          end
+    in
+
+    print_l x (width - 1);
+    Printf.printf "\n"
+  in
+
+  let rec print_c =
+    function
+      | -1	-> ()
+      | n	->
+	begin
+          print_line n;
+          print_c (n - 1)
+	end
+  in
+
+  let rec print_first_line =
+    function
+      | -1	-> ()
+      | y	->
+	begin
+          let case = Maze.get_case_at_pos maze (0, y)
+	  in
+
+          Printf.printf "%d " (Case.color case);
+          print_first_line (y - 1)
+	end
+  in
+
+  print_c (high - 1);
+  Printf.printf "\n"
+
+(* End of print_maze_number *)
+
+let print_maze_state maze width high =
+  let print_line x =
+    let rec print_l x =
+      function
+	| -1	-> ()
+	| y	->
+          begin
+            let case = Maze.get_case_at_pos maze (x, y)
+	    and
+		print_st =
+	      function
+		| Case.Wall	-> Printf.printf "Wall "
+		| Case.Door	-> Printf.printf "Door "
+	    in
+
+            Printf.printf "%2d " (Case.color case);
+            print_st (Case.statement case 0);
+	    print_st (Case.statement case 1);
+	    print_st (Case.statement case 2);
+	    print_st (Case.statement case 3);
+            Printf.printf "\n";
+            print_l x (y - 1)
+          end
+    in
+
+    print_l x (width - 1);
+  in
+
+  let rec print_c =
+    function
+      | -1	-> ()
+      | n	->
+	begin
+          print_line n;
+          print_c (n - 1)
+	end
+  in
+
+  let rec print_first_line =
+    function
+      | -1	-> ()
+      | y	->
+	begin
+          let case = Maze.get_case_at_pos maze (0, y)
+	  in
+
+          Printf.printf "%d " (Case.color case);
+          print_first_line (y - 1)
+	end
+  in
+
+  print_c (high - 1);
+  Printf.printf "\n"
+
+(* End of print_maze_state *)
