@@ -8,13 +8,13 @@
 NAME	=	step4
 
 ML	=	main.ml		\
-		Case.ml		\
-		Draw.ml		\
-		Maze.ml
+		Square.ml	\
+		Maze.ml		\
+		Draw.ml
 
-MLI	=	Case.mli	\
-		Draw.mli	\
-		Maze.mli
+MLI	=	Square.mli	\
+		Maze.mli	\
+		Draw.mli
 
 CMO	=	$(ML:.ml=.cmo)
 

@@ -8,7 +8,7 @@
 
 type maze = Case.case array array
 
-let create width high = (* gestion d'erreur sur la taille *)
+let create width high =
   let rec create_line line value = function
     | -1 -> line
     | n  ->
