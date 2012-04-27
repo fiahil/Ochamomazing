@@ -7,6 +7,7 @@ let width_begin  = ref 0
 let high_begin   = ref 0
 let screen_width = ref 1200
 let screen_high  = ref 800
+
 let empty_0  = Sdlloader.load_image "./img/empty_0.jpg"
 let empty_1  = Sdlloader.load_image "./img/empty_1.jpg"
 let empty_2  = Sdlloader.load_image "./img/empty_2.jpg"
@@ -23,6 +24,8 @@ let empty_12 = Sdlloader.load_image "./img/empty_12.jpg"
 let empty_13 = Sdlloader.load_image "./img/empty_13.jpg"
 let empty_14 = Sdlloader.load_image "./img/empty_14.jpg"
 let path     = Sdlloader.load_image "./img/path.png"
+let enter    = Sdlloader.load_image "./img/enter.png"
+let out      = Sdlloader.load_image "./img/out.png"
 
 let draw_maze screen maze width high =
 
@@ -48,15 +51,26 @@ let draw_maze screen maze width high =
 
   let draw_case (x, y) =
     let position_of_image = Sdlvideo.rect
-      (!screen_width - 50 * y - 50 + !width_begin)
-      (!screen_high - 50 * x - 50 + !high_begin)
+      (!screen_width - (50 * y) - 50 + !width_begin)
+      (!screen_high - (50 * x) - 50 + !high_begin)
+      0 0 in
+    let position_of_path = Sdlvideo.rect
+      (!screen_width - (50 * y) - 50 + !width_begin)
+      (!screen_high - (50 * x) - 50 + !high_begin)
       0 0 in
     Sdlvideo.blit_surface ~dst_rect:position_of_image ~src:
       (pick_sprite (Case.get_sides (Maze.get_case_at_pos maze (x, y))))
       ~dst:screen ();
-    if Maze.get_color_at_pos maze (x, y) != 0
+
+    if Maze.get_color_at_pos maze (x, y) = 2
     then
-      Sdlvideo.blit_surface ~dst_rect:position_of_image ~src:path ~dst:screen ()
+      Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:enter ~dst:screen ()
+    else if Maze.get_color_at_pos maze (x, y) = 3
+    then
+      Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:out ~dst:screen ()
+    else if Maze.get_color_at_pos maze (x, y) != 0
+    then
+      Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:path ~dst:screen ()
     else
       ()
   in
