@@ -7,9 +7,9 @@ An awesome labyrinth game in Ocaml !
 Steps
 ============
 1. Finished
-2. In progress [=======  ]
-3. In progress [======== ]
-4. In progress [=======  ]
+2. In progress [=========] -- Waiting for review
+3. In progress [=========] -- Waiting for review
+4. In progress [=====] -- Tasks : Hexagones & SDL 
 5. --
 
 ============
