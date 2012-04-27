@@ -29,4 +29,4 @@ let _ =
   with
     | Failure "int_of_string"   ->
       prerr_endline ("Cannot transform characters into numbers.")
-(* | _                         -> prerr_endline ("An error occured.") *)
+    | _                         -> prerr_endline ("An error occured.")

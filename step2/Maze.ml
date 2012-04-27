@@ -42,6 +42,9 @@ let set_color_at_pos maze (x, y) col =
   Array.set maze.(x) y (Case.set_color (get_case_at_pos maze (x, y)) col);
   (x, y)
 
+let get_color_at_pos maze (x, y) =
+  Case.color (get_case_at_pos maze (x, y))
+
 let colorize maze width high =
   let get_first (a, _) = a
   in

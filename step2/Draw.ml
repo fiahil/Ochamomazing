@@ -132,7 +132,7 @@ let print_maze_state maze width high =
                 | Case.Door     -> Printf.printf "Door "
             in
 
-            Printf.printf "%2d " (Case.color case);
+            Printf.printf "%d %d %2d " x y (Case.color case);
             print_st (Case.statement case 0);
             print_st (Case.statement case 1);
             print_st (Case.statement case 2);
