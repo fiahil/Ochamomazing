@@ -12,7 +12,7 @@ ML	=	Case.ml		\
 		Draw.ml		\
 		main.ml
 
-MLI	=	Draw.mli
+MLI	=
 
 CMO	=	$(ML:.ml=.cmo)
 

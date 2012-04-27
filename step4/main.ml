@@ -7,6 +7,9 @@
 let len = ref 0
 let hig = ref 0
 
+module SqMaze = Maze.MakeMaze (Case.Case)
+module SqPrint = Draw.MakePrinter (SqMaze)
+
 let selectDim v =
   if !len = 0 then
     len := int_of_string v
@@ -18,7 +21,7 @@ let main () =
   in
 
   if !len > 0 && !hig > 0 then
-    Draw.print_maze (Maze.colorize (Maze.create !len !hig) !len !hig) !len !hig
+    SqPrint.print_maze (SqMaze.colorize (SqMaze.create !len !hig) !len !hig) !len !hig
   else
     prerr_endline "Bad arguments. X & Y must be > 0."
 

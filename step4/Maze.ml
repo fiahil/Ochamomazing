@@ -8,24 +8,24 @@
 
 module type MAKEMAZE =
 sig
-  type t
   type maze
+
+  module Elt : Case.CASE
 
   val create : int -> int -> maze
   val colorize : maze -> int -> int -> maze
-  val get_case_at_pos : maze -> int * int -> t
+  val get_case_at_pos : maze -> int * int -> Elt.case
   val set_color_at_pos : maze -> int * int -> int -> int * int
 end
 
 module MakeMaze (Val : Case.CASE) : MAKEMAZE
   with
-    type t = Case.Case.case
-  and
-    type maze = Case.Case.case array array =
+    type maze = Val.case array array =
 
 struct
-  type t = Val.case
-  type maze = t array array
+  type maze = Val.case array array
+
+  module Elt = Val
 
   let create width high =
     let rec create_line line value =
@@ -122,8 +122,8 @@ struct
       let change_wall case =
 	function
 	  | (1, 0)	-> Val.set_side case Val.Door 0
-	  | (-1, 0)	-> Val.set_side case Val.Door 1
-	  | (0, -1)	-> Val.set_side case Val.Door 2
+	  | (0, -1)	-> Val.set_side case Val.Door 1
+	  | (-1, 0)	-> Val.set_side case Val.Door 2
 	  | (0, 1)	-> Val.set_side case Val.Door 3
 	  | _		-> failwith "Invalid direction tuple."
       and
