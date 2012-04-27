@@ -64,7 +64,6 @@ struct
     in
 
     begin
-      picker := (Array.make (high * width) (0, 0));
       let pp = create_map (Array.make high [||]) width (high - 1);
       in
 
