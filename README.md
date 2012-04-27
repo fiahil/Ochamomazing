@@ -7,7 +7,7 @@ An awesome labyrinth game in Ocaml !
 Steps
 ============
 1. Finished
-2. --
+2. In progress
 3. In progress
 4. In progress
 5. --
