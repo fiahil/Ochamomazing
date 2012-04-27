@@ -16,11 +16,11 @@ let print_maze maze width high =
             let case = Maze.get_case_at_pos maze (x, y)
 	    in
 
-	    if Case.statement case 1 = Case.Wall then
+	    if Case.statement case 2 = Case.Wall then
 	      Printf.printf "_"
 	    else
 	      Printf.printf " ";
-            if Case.statement case 2 = Case.Wall then
+            if Case.statement case 1 = Case.Wall then
 	      Printf.printf "|"
 	    else
 	      Printf.printf " ";
@@ -80,7 +80,14 @@ let print_maze_numbers maze width high =
 	| y	->
           begin
             let case = Maze.get_case_at_pos maze (x, y) in
-            Printf.printf "%2d " (Case.color case);
+	    if (Case.color case = 1) then
+              Printf.printf "[31;41m # [00m"
+	    else if (Case.color case = 2) then
+              Printf.printf "[32;42m # [00m"
+	    else if (Case.color case = 3) then
+              Printf.printf "[33;43m # [00m"
+	    else
+	      Printf.printf "%2d " (Case.color case);
             print_l x (y - 1)
           end
     in
@@ -132,10 +139,14 @@ let print_maze_state maze width high =
 		| Case.Door	-> Printf.printf "Door "
 	    in
 
-            Printf.printf "%2d " (Case.color case);
+            Printf.printf "por x: %2d y: %2d color %2d " x y (Case.color case);
+	    Printf.printf " 0 = ";
             print_st (Case.statement case 0);
+	    Printf.printf " | 1 = ";
 	    print_st (Case.statement case 1);
+	    Printf.printf " | 2 = ";
 	    print_st (Case.statement case 2);
+	    Printf.printf " | 3 = ";
 	    print_st (Case.statement case 3);
             Printf.printf "\n";
             print_l x (y - 1)
