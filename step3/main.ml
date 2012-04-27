@@ -23,7 +23,8 @@ let main () =
     in
     begin
       Draw.print_maze ma !len !hig;
-      Draw.print_maze_numbers (Pathfinder.run ma  (Random.int !hig, Random.int !len) (Random.int !hig, Random.int !len)) !len !hig
+      Draw.print_maze_numbers (Pathfinder.run ma  (0, 0) (!hig - 1, !len - 1)) !len !hig;
+      DrawSdl.print_maze ma !len !hig
     end
   else
     prerr_endline "Bad arguments. X & Y must be > 0."

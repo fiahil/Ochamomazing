@@ -20,6 +20,9 @@ let color c =
 let set_color {color = c; sides = si} col =
   {color = col; sides = si}
 
+let get_sides {color = c; sides = si} =
+  si
+
 let statement {color = col; sides = (n, e, s, w)} =
   function
     | 0 -> n
