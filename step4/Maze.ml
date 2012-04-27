@@ -82,22 +82,7 @@ struct
     let inverse_tuple (x, y) = (-x, -y)
     in
 
-    let get_rand_case () =
-      let ret =
-	if List.length !picker > 0 then
-	  List.hd !picker
-	else
-	  (Random.int width, Random.int high)
-      in
-
-      begin
-	Printf.printf "%d # %d\n" (fst ret) (snd ret);
-	if List.length !picker > 0 then
-	  picker := (List.tl !picker)
-	else
-	  ();
-	ret
-      end
+    let get_rand_case () = (Random.int len, Random.int high)
     in
 
     let get_rand_dir () = Val.get_dir_pattern (Random.int Elt.numberSides)
@@ -149,11 +134,13 @@ struct
 		Val.color (get_case_at_pos maze (add_tuple dir case))))
       then
 	begin
-          Array.set maze.(fst (add_tuple dir case)) (snd (add_tuple dir case))
+          Array.set maze.(fst (add_tuple dir case))
+	    (snd (add_tuple dir case))
 	    (change_wall
 	       (get_case_at_pos maze (add_tuple dir case))
 	       (inverse_tuple dir));
-          Array.set maze.(fst case) (snd case)
+          Array.set maze.(fst case)
+	    (snd case)
 	    (change_wall
 	       (get_case_at_pos maze case) dir);
           change_case_by_color
