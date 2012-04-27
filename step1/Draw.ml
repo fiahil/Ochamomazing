@@ -10,20 +10,20 @@ let print_maze maze width high =
   let print_line x =
     let rec print_l x =
       function
-	| -1	-> ()
-	| y	->
+        | -1    -> ()
+        | y     ->
           begin
             let case = Maze.get_case_at_pos maze (x, y)
-	    in
+            in
 
-	    if Case.statement case 1 = Case.Wall then
-	      Printf.printf "_"
-	    else
-	      Printf.printf " ";
             if Case.statement case 2 = Case.Wall then
-	      Printf.printf "|"
-	    else
-	      Printf.printf " ";
+              Printf.printf "_"
+            else
+              Printf.printf " ";
+            if Case.statement case 1 = Case.Wall then
+              Printf.printf "|"
+            else
+              Printf.printf " ";
             print_l x (y - 1)
           end
     in
@@ -41,29 +41,29 @@ let print_maze maze width high =
 
   let rec print_c =
     function
-      | -1	-> ()
-      | n	->
-	begin
+      | -1      -> ()
+      | n       ->
+        begin
           print_line n;
           print_c (n - 1)
-	end
+        end
   in
 
   let rec print_first_line =
     function
-      | -1	-> ()
-      | y	->
-	begin
+      | -1      -> ()
+      | y       ->
+        begin
           let case = Maze.get_case_at_pos maze (high - 1, y)
-	  in
+          in
 
           Printf.printf " ";
           if Case.statement case 0 = Case.Wall then
-	    Printf.printf "_"
-	  else
-	    Printf.printf " ";
+            Printf.printf "_"
+          else
+            Printf.printf " ";
           print_first_line (y - 1)
-	end
+        end
   in
 
   print_first_line (width - 1);
@@ -76,8 +76,8 @@ let print_maze_numbers maze width high =
   let print_line x =
     let rec print_l x =
       function
-	| -1	-> ()
-	| y	->
+        | -1    -> ()
+        | y     ->
           begin
             let case = Maze.get_case_at_pos maze (x, y) in
             Printf.printf "%2d " (Case.color case);
@@ -91,25 +91,25 @@ let print_maze_numbers maze width high =
 
   let rec print_c =
     function
-      | -1	-> ()
-      | n	->
-	begin
+      | -1      -> ()
+      | n       ->
+        begin
           print_line n;
           print_c (n - 1)
-	end
+        end
   in
 
   let rec print_first_line =
     function
-      | -1	-> ()
-      | y	->
-	begin
+      | -1      -> ()
+      | y       ->
+        begin
           let case = Maze.get_case_at_pos maze (0, y)
-	  in
+          in
 
           Printf.printf "%d " (Case.color case);
           print_first_line (y - 1)
-	end
+        end
   in
 
   print_c (high - 1);
@@ -121,22 +121,22 @@ let print_maze_state maze width high =
   let print_line x =
     let rec print_l x =
       function
-	| -1	-> ()
-	| y	->
+        | -1    -> ()
+        | y     ->
           begin
             let case = Maze.get_case_at_pos maze (x, y)
-	    and
-		print_st =
-	      function
-		| Case.Wall	-> Printf.printf "Wall "
-		| Case.Door	-> Printf.printf "Door "
-	    in
+            and
+                print_st =
+              function
+                | Case.Wall     -> Printf.printf "Wall "
+                | Case.Door     -> Printf.printf "Door "
+            in
 
             Printf.printf "%2d " (Case.color case);
             print_st (Case.statement case 0);
-	    print_st (Case.statement case 1);
-	    print_st (Case.statement case 2);
-	    print_st (Case.statement case 3);
+            print_st (Case.statement case 1);
+            print_st (Case.statement case 2);
+            print_st (Case.statement case 3);
             Printf.printf "\n";
             print_l x (y - 1)
           end
@@ -147,25 +147,25 @@ let print_maze_state maze width high =
 
   let rec print_c =
     function
-      | -1	-> ()
-      | n	->
-	begin
+      | -1      -> ()
+      | n       ->
+        begin
           print_line n;
           print_c (n - 1)
-	end
+        end
   in
 
   let rec print_first_line =
     function
-      | -1	-> ()
-      | y	->
-	begin
+      | -1      -> ()
+      | y       ->
+        begin
           let case = Maze.get_case_at_pos maze (0, y)
-	  in
+          in
 
           Printf.printf "%d " (Case.color case);
           print_first_line (y - 1)
-	end
+        end
   in
 
   print_c (high - 1);
