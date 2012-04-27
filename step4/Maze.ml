@@ -40,7 +40,7 @@ struct
 	| n	->
 	  begin
             Array.set line n (Val.create value);
-	    Array.set !picker !next (!cur, n);
+	    picker := (!cur, n)::!picker;
 	    next := !next + 1;
             create_line line (value + 1) (n - 1)
 	  end
@@ -67,7 +67,7 @@ struct
       let pp = create_map (Array.make high [||]) width (high - 1);
       in
 
-      Array.iter printer !picker;
+      List.iter printer !picker;
       pp(* TODO*)
     end
 
@@ -79,17 +79,25 @@ struct
     (x, y)
 
   let colorize maze width high =
-    let get_first (a, _) = a
-    in
-
-    let get_second (_, b) = b
-    in
-
     let inverse_tuple (x, y) = (-x, -y)
     in
 
     let get_rand_case () =
-      List.nth !picker (Random.int (Array.length !picker))
+      let ret =
+	if List.length !picker > 0 then
+	  List.hd !picker
+	else
+	  (Random.int width, Random.int high)
+      in
+
+      begin
+	Printf.printf "%d # %d\n" (fst ret) (snd ret);
+	if List.length !picker > 0 then
+	  picker := (List.tl !picker)
+	else
+	  ();
+	ret
+      end
     in
 
     let get_rand_dir () = Val.get_dir_pattern (Random.int Elt.numberSides)
@@ -133,10 +141,6 @@ struct
 
     let change_case case dir =
       let change_wall case dir = Val.set_dir_pattern case dir
-      and
-	  min x y = if x > y then y else x
-      and
-	  max x y = if x > y then x else y
       in
 
 
@@ -145,13 +149,11 @@ struct
 		Val.color (get_case_at_pos maze (add_tuple dir case))))
       then
 	begin
-          Array.set maze.(get_first (add_tuple dir case))
-	    (get_second (add_tuple dir case))
+          Array.set maze.(fst (add_tuple dir case)) (snd (add_tuple dir case))
 	    (change_wall
 	       (get_case_at_pos maze (add_tuple dir case))
 	       (inverse_tuple dir));
-          Array.set maze.(get_first case)
-	    (get_second case)
+          Array.set maze.(fst case) (snd case)
 	    (change_wall
 	       (get_case_at_pos maze case) dir);
           change_case_by_color
