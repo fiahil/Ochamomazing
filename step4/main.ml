@@ -21,7 +21,13 @@ let main () =
   in
 
   if !len > 0 && !hig > 0 then
-    SqPrint.print_maze (SqMaze.colorize (SqMaze.create !len !hig) !len !hig) !len !hig
+    begin
+      let maze = SqMaze.colorize (SqMaze.create !len !hig) !len !hig
+      in
+
+      SqPrint.print_maze maze !len !hig;
+      SqPrint.print_maze_numbers maze !len !hig
+    end
   else
     prerr_endline "Bad arguments. X & Y must be > 0."
 

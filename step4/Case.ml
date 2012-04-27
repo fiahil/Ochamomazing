@@ -8,16 +8,17 @@
 
 module type CASE =
 sig
+  type case
   type elt =
     | Wall
     | Door
-
-  type case = {color: int; sides: (elt * elt * elt * elt)}
 
   val numberSides : int
   val color : case -> int
   val set_color : case -> int -> case
   val set_side : case -> elt -> int -> case
+  val get_dir_pattern : int -> int * int
+  val set_dir_pattern : case -> int * int -> case
   val statement : case -> int -> elt
   val create : int -> case
 end
@@ -32,11 +33,9 @@ struct
 
   let numberSides = 4
 
-  let color c =
-    c.color
+  let color c = c.color
 
-  let set_color {color = c; sides = si} col =
-    {color = col; sides = si}
+  let set_color {color = c; sides = si} col = {color = col; sides = si}
 
   let statement {color = col; sides = (n, e, s, w)} =
     function
@@ -54,6 +53,20 @@ struct
       | 3 -> {color = col; sides = (n, e, s, elt_Type)}
       | _ -> failwith "A Square case have only 4 sides."
 
-  let create col =
-    {color = col; sides = (Wall, Wall, Wall, Wall)}
+  let create col = {color = col; sides = (Wall, Wall, Wall, Wall)}
+
+  let get_dir_pattern =
+    function
+      | 0	-> (0, 1)
+      | 1	-> (1, 0)
+      | 2	-> (0, -1)
+      | _	-> (-1, 0)
+
+  let set_dir_pattern case =
+    function
+      | (1, 0)	-> set_side case Door 0
+      | (0, -1)	-> set_side case Door 1
+      | (-1, 0)	-> set_side case Door 2
+      | (0, 1)	-> set_side case Door 3
+      | _	-> failwith "Invalid direction pattern."
 end

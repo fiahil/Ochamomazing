@@ -27,13 +27,21 @@ struct
 
   module Elt = Val
 
+  let picker = ref []
+
   let create width high =
-    let rec create_line line value =
+    let rec cur = ref 0
+    and
+	next = ref 0
+    and
+	create_line line value =
       function
 	| -1	-> line
 	| n	->
 	  begin
             Array.set line n (Val.create value);
+	    Array.set !picker !next (!cur, n);
+	    next := !next + 1;
             create_line line (value + 1) (n - 1)
 	  end
     in
@@ -48,11 +56,21 @@ struct
 		 (Array.make width (Val.create (n * width)))
 		 (n * width)
 		 (width - 1));
+	    cur := !cur + 1;
             create_map map width (n - 1)
 	  end
+    and
+	printer (a, b) = Printf.printf "%d - %d\n" a b
     in
 
-    create_map (Array.make high [||]) width (high - 1)
+    begin
+      picker := (Array.make (high * width) (0, 0));
+      let pp = create_map (Array.make high [||]) width (high - 1);
+      in
+
+      Array.iter printer !picker;
+      pp(* TODO*)
+    end
 
   let get_case_at_pos maze (x, y) =
     Array.get (Array.get maze x) y
@@ -71,15 +89,11 @@ struct
     let inverse_tuple (x, y) = (-x, -y)
     in
 
-    let get_rand_case () = (Random.int high, Random.int width)
+    let get_rand_case () =
+      List.nth !picker (Random.int (Array.length !picker))
     in
 
-    let get_rand_dir () =
-      match (Random.int 4) with
-	| 0	-> (0, 1)
-	| 1	-> (1, 0)
-	| 2	-> (0, -1)
-	| _	-> (-1, 0)
+    let get_rand_dir () = Val.get_dir_pattern (Random.int Elt.numberSides)
     in
 
     let check_position (x, y) =
@@ -119,25 +133,11 @@ struct
     in
 
     let change_case case dir =
-      let change_wall case =
-	function
-	  | (1, 0)	-> Val.set_side case Val.Door 0
-	  | (0, -1)	-> Val.set_side case Val.Door 1
-	  | (-1, 0)	-> Val.set_side case Val.Door 2
-	  | (0, 1)	-> Val.set_side case Val.Door 3
-	  | _		-> failwith "Invalid direction tuple."
+      let change_wall case dir = Val.set_dir_pattern case dir
       and
-	  min x y =
-	if x > y then
-	  y
-	else
-	  x
+	  min x y = if x > y then y else x
       and
-	  max x y =
-	if x > y then
-	  x
-	else
-	  y
+	  max x y = if x > y then x else y
       in
 
 
