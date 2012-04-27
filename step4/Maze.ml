@@ -27,21 +27,13 @@ struct
 
   module Elt = Val
 
-  let picker = ref []
-
   let create width high =
-    let rec cur = ref 0
-    and
-	next = ref 0
-    and
-	create_line line value =
+    let rec create_line line value =
       function
 	| -1	-> line
 	| n	->
 	  begin
             Array.set line n (Val.create value);
-	    picker := (!cur, n)::!picker;
-	    next := !next + 1;
             create_line line (value + 1) (n - 1)
 	  end
     in
@@ -56,20 +48,11 @@ struct
 		 (Array.make width (Val.create (n * width)))
 		 (n * width)
 		 (width - 1));
-	    cur := !cur + 1;
             create_map map width (n - 1)
 	  end
-    and
-	printer (a, b) = Printf.printf "%d - %d\n" a b
     in
 
-    begin
-      let pp = create_map (Array.make high [||]) width (high - 1);
-      in
-
-      List.iter printer !picker;
-      pp(* TODO*)
-    end
+    create_map (Array.make high [||]) width (high - 1)
 
   let get_case_at_pos maze (x, y) =
     Array.get (Array.get maze x) y
@@ -82,7 +65,7 @@ struct
     let inverse_tuple (x, y) = (-x, -y)
     in
 
-    let get_rand_case () = (Random.int len, Random.int high)
+    let get_rand_case () = (Random.int width, Random.int high)
     in
 
     let get_rand_dir () = Val.get_dir_pattern (Random.int Elt.numberSides)
