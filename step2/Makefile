@@ -7,14 +7,15 @@
 
 NAME	=	step2
 
-ML	=	main.ml		\
-		Case.ml		\
+ML	=	Case.ml		\
+		Maze.ml		\
 		Draw.ml		\
-		Maze.ml
+		DrawSdl.ml	\
+		main.ml
 
 MLI	=	Case.mli	\
-		Draw.mli	\
-		Maze.mli
+		Maze.mli	\
+		Draw.mli
 
 CMO	=	$(ML:.ml=.cmo)
 
@@ -27,7 +28,7 @@ FLAGS	=	-w Aelz
 CC	=	ocamlopt
 
 %.cmx: %.ml
-	$(CC) -o $@	-c $< $(FLAGS)
+	$(CC) -I +sdl sdl.cmxa bigarray.cmxa  sdlloader.cmxa -o $@	-c $< $(FLAGS)
 
 %.cmo: %.ml
 	$(CC) -o $@	-c $< $(FLAGS)
@@ -38,7 +39,7 @@ CC	=	ocamlopt
 all:	.dep $(CMI) $(NAME)
 
 $(NAME):	$(CMX)
-	$(CC) -o $(NAME) $(CMX)
+	$(CC) -I +sdl sdl.cmxa bigarray.cmxa  sdlloader.cmxa -o $(NAME) $(CMX)
 
 byte:	CC = ocamlc
 byte:	clean $(CMI) $(CMO)
