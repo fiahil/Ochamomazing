@@ -10,6 +10,7 @@ let hig = ref 0
 module SqMaze = Maze.MakeMaze (Case.Square)
 (* module HeMaze = Maze.MakeMaze (Case.Hexa) *)
 module SqPrint = DrawSdl.MakeDraw (SqMaze)
+module SqSolve = Pathfinder.MakePathfinder (SqMaze)
 
 let selectDim v =
   if !len = 0 then
@@ -22,13 +23,16 @@ let main () =
   in
 
   if !len > 0 && !hig > 0 then
-    begin
-      let maze = SqMaze.colorize (SqMaze.create !len !hig) !len !hig
-      in
+    let entry = (Random.int !hig, Random.int !len)
+    and
+        out = (Random.int !hig, Random.int !len)
+    in
 
-      (* SqPrint.print_maze maze !len !hig; *)
-      SqPrint.print_maze maze (0, 0) !len !hig
-    end
+    SqPrint.print_maze
+      (SqSolve.solve
+         (SqMaze.colorize
+            (SqMaze.create !len !hig) !len !hig)
+         entry out) entry !len !hig
   else
     prerr_endline "Bad arguments. X & Y must be > 0."
 
@@ -37,6 +41,8 @@ let _ =
   try
     main ()
   with
-    | Failure "int_of_string"   ->
+    | Failure "int_of_string"			->
       prerr_endline ("Cannot transform characters into numbers.")
-(* | _                         -> prerr_endline ("An error occured.") *)
+    | Failure "Invalid wall combination"	->
+      prerr_endline "Maze too small."
+    | _                         -> prerr_endline ("An error occured.")

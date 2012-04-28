@@ -66,12 +66,6 @@ struct
     Val.color (get_case_at_pos maze (x, y))
 
   let colorize maze width high =
-    let get_first (a, _) = a
-    in
-
-    let get_second (_, b) = b
-    in
-
     let inverse_tuple (x, y) = (-x, -y)
     in
 
@@ -130,33 +124,18 @@ struct
           | (-1, 0)       -> Val.set_side case Val.Door 2
           | (0, 1)        -> Val.set_side case Val.Door 3
           | _             -> failwith "Invalid direction tuple."
-      and
-          min x y =
-	if x > y then
-          y
-	else
-          x
-      and
-          max x y =
-	if x > y then
-          x
-	else
-          y
       in
-
 
       if (check_position (add_tuple dir case) &&
             (Val.color (get_case_at_pos maze case) !=
 		Val.color (get_case_at_pos maze (add_tuple dir case))))
       then
 	begin
-          Array.set maze.(get_first (add_tuple dir case))
-            (get_second (add_tuple dir case))
+          Array.set maze.(fst (add_tuple dir case)) (snd (add_tuple dir case))
             (change_wall
                (get_case_at_pos maze (add_tuple dir case))
                (inverse_tuple dir));
-          Array.set maze.(get_first case)
-            (get_second case)
+          Array.set maze.(fst case) (snd case)
             (change_wall
                (get_case_at_pos maze case) dir);
           change_case_by_color

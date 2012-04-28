@@ -11,8 +11,8 @@ type maze = Case.case array array
 let create width high =
   let rec create_line line value =
     function
-      | -1      -> line
-      | n       ->
+      | -1	-> line
+      | n	->
         begin
           Array.set line n (Case.create value);
           create_line line (value + 1) (n - 1)
@@ -21,8 +21,8 @@ let create width high =
 
   let rec create_map map width =
     function
-      | -1      -> map
-      | n       ->
+      | -1	-> map
+      | n	->
         begin
           Array.set map n
             (create_line
@@ -46,12 +46,6 @@ let get_color_at_pos maze (x, y) =
   Case.color (get_case_at_pos maze (x, y))
 
 let colorize maze width high =
-  let get_first (a, _) = a
-  in
-
-  let get_second (_, b) = b
-  in
-
   let inverse_tuple (x, y) = (-x, -y)
   in
 
@@ -60,10 +54,10 @@ let colorize maze width high =
 
   let get_rand_dir () =
     match (Random.int 4) with
-      | 0       -> (0, 1)
-      | 1       -> (1, 0)
-      | 2       -> (0, -1)
-      | _       -> (-1, 0)
+      | 0	-> (0, 1)
+      | 1	-> (1, 0)
+      | 2	-> (0, -1)
+      | _	-> (-1, 0)
   in
 
   let check_position (x, y) =
@@ -76,8 +70,8 @@ let colorize maze width high =
   let change_case_by_color color new_color =
     let rec change_columns x =
       function
-        | -1    -> ()
-        | y     ->
+        | -1	-> ()
+        | y	->
           if (Case.color (get_case_at_pos maze (x, y)) = color)
           then
             begin
@@ -91,8 +85,8 @@ let colorize maze width high =
 
     let rec change_lines =
       function
-        | -1    -> ()
-        | x     ->
+        | -1	-> ()
+        | x	->
           begin
             change_columns x (width - 1);
             change_lines (x - 1)
@@ -105,38 +99,25 @@ let colorize maze width high =
   let change_case case dir =
     let change_wall case =
       function
-        | (1, 0)        -> Case.set_side case Case.Door 0
-        | (0, -1)       -> Case.set_side case Case.Door 1
-        | (-1, 0)       -> Case.set_side case Case.Door 2
-        | (0, 1)        -> Case.set_side case Case.Door 3
-        | _             -> failwith "Invalid direction tuple."
-    and
-        min x y =
-      if x > y then
-        y
-      else
-        x
-    and
-        max x y =
-      if x > y then
-        x
-      else
-        y
+        | (1, 0)	-> Case.set_side case Case.Door 0
+        | (0, -1)	-> Case.set_side case Case.Door 1
+        | (-1, 0)	-> Case.set_side case Case.Door 2
+        | (0, 1)	-> Case.set_side case Case.Door 3
+        | _		-> failwith "Invalid direction tuple."
     in
-
 
     if (check_position (add_tuple dir case) &&
           (Case.color (get_case_at_pos maze case) !=
               Case.color (get_case_at_pos maze (add_tuple dir case))))
     then
       begin
-        Array.set maze.(get_first (add_tuple dir case))
-          (get_second (add_tuple dir case))
+        Array.set maze.(fst (add_tuple dir case))
+          (snd (add_tuple dir case))
           (change_wall
              (get_case_at_pos maze (add_tuple dir case))
              (inverse_tuple dir));
-        Array.set maze.(get_first case)
-          (get_second case)
+        Array.set maze.(fst case)
+          (snd case)
           (change_wall
              (get_case_at_pos maze case) dir);
         change_case_by_color

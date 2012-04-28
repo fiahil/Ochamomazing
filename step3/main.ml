@@ -38,4 +38,6 @@ let _ =
   with
     | Failure "int_of_string"   ->
       prerr_endline ("Cannot transform characters into numbers.")
+    | Failure "Invalid wall combination"	->
+      prerr_endline "Maze too small."
     | _				-> prerr_endline ("An error occured.")
