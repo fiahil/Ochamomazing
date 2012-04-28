@@ -24,8 +24,8 @@ let main () =
 
   if !len > 0 && !hig > 0 then
     let entry = (Random.int !hig, Random.int !len)
-    and
-        out = (Random.int !hig, Random.int !len)
+    (* and *)
+    (* out = (Random.int !hig, Random.int !len) *)
     in
 
     SqPrint.print_maze

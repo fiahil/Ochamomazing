@@ -79,9 +79,6 @@ struct
       x > -1 && y > -1 && x < high && y < width
     in
 
-    (* let add_tuple (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)  (\* virer ? *\) *)
-    (* in *)
-
     let change_case_by_color color new_color =
       let rec change_columns x =
         function
@@ -141,117 +138,10 @@ struct
         0
     in
 
-    let print_maze_numbers maze width high =
-      let print_line x =
-        let rec print_l x =
-          function
-            | -1        -> ()
-            | y ->
-              begin
-                let case = get_case_at_pos maze (x, y) in
-                Printf.printf "%2d " (Val.color case);
-                print_l x (y - 1)
-              end
-        in
-
-        print_l x (width - 1);
-        Printf.printf "\n"
-      in
-
-      let rec print_c =
-        function
-          | -1  -> ()
-          | n   ->
-            begin
-              print_line n;
-              print_c (n - 1)
-            end
-      in
-
-      let rec print_first_line =
-        function
-          | -1  -> ()
-          | y   ->
-            begin
-              let case = get_case_at_pos maze (0, y)
-              in
-
-              Printf.printf "%d " (Val.color case);
-              print_first_line (y - 1)
-            end
-      in
-
-      print_c (high - 1);
-      Printf.printf "\n"
-    in
-
-
-    let print_maze_state maze width high =
-      let print_line x =
-        let rec print_l x =
-          function
-            | -1        -> ()
-            | y ->
-              begin
-                let case = get_case_at_pos maze (x, y)
-                and
-                    print_st =
-                  function
-                    | Val.Wall      -> Printf.printf "Wall "
-                    | Val.Door      -> Printf.printf "Door "
-                in
-
-                Printf.printf "%2d " (Val.color case);
-                print_st (Val.statement case 0);
-                print_st (Val.statement case 1);
-                print_st (Val.statement case 2);
-                print_st (Val.statement case 3);
-                print_st (Val.statement case 4);
-                print_st (Val.statement case 5);
-                Printf.printf "\n";
-                print_l x (y - 1)
-              end
-        in
-
-        print_l x (width - 1);
-      in
-
-      let rec print_c =
-        function
-          | -1  -> ()
-          | n   ->
-            begin
-              print_line n;
-              print_c (n - 1)
-            end
-      in
-
-      let rec print_first_line =
-        function
-          | -1  -> ()
-          | y   ->
-            begin
-              let case = get_case_at_pos maze (0, y)
-              in
-
-              Printf.printf "%d " (Val.color case);
-              print_first_line (y - 1)
-            end
-      in
-
-      print_c (high - 1);
-      Printf.printf "\n"
-    in
-
     let rec change_cases =
       function
         | 0     -> ()
-        | n     ->
-          begin
-            (* print_maze_numbers maze width high; *)
-            (* print_maze_state maze width high; *)
-            change_cases (n - (change_case (get_rand_case()) (get_rand_dir())))
-          end
+        | n     -> change_cases (n - (change_case (get_rand_case()) (get_rand_dir())))
     in
 
     change_cases (width * high - 1);
