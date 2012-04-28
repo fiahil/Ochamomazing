@@ -31,8 +31,8 @@ struct
   let create width high =
     let rec create_line line value =
       function
-	| -1      -> line
-	| n       ->
+        | -1      -> line
+        | n       ->
           begin
             Array.set line n (Val.create value);
             create_line line (value + 1) (n - 1)
@@ -41,14 +41,14 @@ struct
 
     let rec create_map map width =
       function
-	| -1      -> map
-	| n       ->
+        | -1      -> map
+        | n       ->
           begin
             Array.set map n
               (create_line
-		 (Array.make width (Val.create (n * width)))
-		 (n * width)
-		 (width - 1));
+                 (Array.make width (Val.create (n * width)))
+                 (n * width)
+                 (width - 1));
             create_map map width (n - 1)
           end
     in
@@ -74,10 +74,10 @@ struct
 
     let get_rand_dir () =
       match (Random.int 4) with
-	| 0       -> (0, 1)
-	| 1       -> (1, 0)
-	| 2       -> (0, -1)
-	| _       -> (-1, 0)
+        | 0       -> (0, 1)
+        | 1       -> (1, 0)
+        | 2       -> (0, -1)
+        | _       -> (-1, 0)
     in
 
     let check_position (x, y) =
@@ -89,22 +89,22 @@ struct
 
     let change_case_by_color color new_color =
       let rec change_columns x =
-	function
+        function
           | -1    -> ()
           | y     ->
             if (Val.color (get_case_at_pos maze (x, y)) = color)
             then
               begin
-		Array.set maze.(x) y
+                Array.set maze.(x) y
                   (Val.set_color (get_case_at_pos maze (x, y)) new_color);
-		change_columns x (y - 1)
+                change_columns x (y - 1)
               end
             else
               change_columns x (y - 1)
       in
 
       let rec change_lines =
-	function
+        function
           | -1    -> ()
           | x     ->
             begin
@@ -118,7 +118,7 @@ struct
 
     let change_case case dir =
       let change_wall case =
-	function
+        function
           | (1, 0)        -> Val.set_side case Val.Door 0
           | (0, -1)       -> Val.set_side case Val.Door 1
           | (-1, 0)       -> Val.set_side case Val.Door 2
@@ -128,9 +128,9 @@ struct
 
       if (check_position (add_tuple dir case) &&
             (Val.color (get_case_at_pos maze case) !=
-		Val.color (get_case_at_pos maze (add_tuple dir case))))
+                Val.color (get_case_at_pos maze (add_tuple dir case))))
       then
-	begin
+        begin
           Array.set maze.(fst (add_tuple dir case)) (snd (add_tuple dir case))
             (change_wall
                (get_case_at_pos maze (add_tuple dir case))
@@ -144,15 +144,15 @@ struct
             (min (Val.color (get_case_at_pos maze (add_tuple dir case)))
                (Val.color (get_case_at_pos maze case)));
           1
-	end
+        end
       else
-	0
+        0
     in
 
     let rec change_cases =
       function
-	| 0       -> ()
-	| n       -> change_cases (n - (change_case (get_rand_case()) (get_rand_dir())))
+        | 0       -> ()
+        | n       -> change_cases (n - (change_case (get_rand_case()) (get_rand_dir())))
     in
 
     change_cases (width * high - 1);
