@@ -78,10 +78,10 @@ struct
 
   let get_dir_pattern =
     function
-      | 0       -> (0, 1)
-      | 1       -> (1, 0)
-      | 2       -> (0, -1)
-      | _       -> (-1, 0)
+      | 0       -> (1, 0)
+      | 1       -> (0, -1)
+      | 2       -> (-1, 0)
+      | _       -> (0, 1)
 
   let set_dir_pattern case =
     function

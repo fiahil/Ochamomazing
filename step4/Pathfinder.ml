@@ -39,13 +39,17 @@ struct
       Val.Elt.statement (Val.get_case_at_pos maze cur) di
     in
 
-    let at_right =
-      function
-	| 0	-> 1
-	| 1	-> 2
-	| 2	-> 3
-	| 3	-> 0
-	| _	-> failwith "Impossible direction."
+    let at_right dir =
+      if dir >= (Val.Elt.numberSides - 1) then
+	0
+      else
+	dir + 1
+    and
+	at_left dir =
+      if dir <= 0 then
+	Val.Elt.numberSides - 1
+      else
+	dir - 1
     in
 
     let color_path old current dir =
@@ -67,35 +71,25 @@ struct
 
     let get_color pos =
       Val.Elt.color (Val.get_case_at_pos maze pos)
+    and
+	get_new_case (x, y) (opx, opy) =
+      (x + opx, y + opy)
     in
 
-    let move_path =
-      function
-	| ((cx, cy), 0)	->
-	  color_path (cx, cy) (cx + 1, cy) 0 (get_color (cx + 1, cy), get_color (cx, cy))
-	| ((cx, cy), 1)	->
-	  color_path (cx, cy) (cx, cy - 1) 1 (get_color (cx, cy - 1), get_color (cx, cy))
-	| ((cx, cy), 2)	->
-	  color_path (cx, cy) (cx - 1, cy) 2 (get_color (cx - 1, cy), get_color (cx, cy))
-	| ((cx, cy), 3)	->
-	  color_path (cx, cy) (cx, cy + 1) 3 (get_color (cx, cy + 1), get_color (cx, cy))
-	| _		-> failwith "Execution fatal error."
+    let move_path (pos, dir) =
+      let value = get_new_case pos (Val.Elt.get_dir_pattern dir)
+      in
+
+      color_path pos value dir (get_color value, get_color pos)
     in
 
     let rec in_find =
       function
-	| ((-42, -42), _, _)		-> maze
-	| (current, dir, Val.Elt.Door)	->
+	| ((-42, -42), _, _)			-> maze
+	| (current, dir, Val.Elt.Door)		->
 	  in_find (move_path (current, dir))
-	| (current, 0, _)			->
-	  in_find (current, 3, stat current 3)
-	| (current, 1, _)			->
-	  in_find (current, 0, stat current 0)
-	| (current, 2, _)			->
-	  in_find (current, 1, stat current 1)
-	| (current, 3, _)			->
-	  in_find (current, 2, stat current 2)
-	| _				-> failwith "Execution fatal error"
+	| (current, dir, _)			->
+	  in_find (current, at_left dir, stat current (at_left dir))
     in
 
     if (comp_tuple entry out) then
