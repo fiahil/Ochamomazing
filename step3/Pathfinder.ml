@@ -78,5 +78,8 @@ let run maze entry out =
 	  in_find (current, 2, stat current 2)
       | _				-> failwith "Execution fatal error"
   in
-  in_find (entry, 0, (Case.statement (Maze.get_case_at_pos maze (Maze.set_color_at_pos maze entry 2)) 0))
+  if (comp_tuple entry out) then
+    maze
+  else
+    in_find (entry, 0, (Case.statement (Maze.get_case_at_pos maze (Maze.set_color_at_pos maze entry 2)) 0))
 ;;
