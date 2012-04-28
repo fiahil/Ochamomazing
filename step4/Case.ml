@@ -170,24 +170,34 @@ struct
       | (-1, 0) -> (0, 1)
       | _       -> failwith "Invalid direction pattern."
 
+  (* let get_adj_case (x, y) = *)
+  (* function *)
+  (* | (0, 0)  -> (y, x + 2) *)
+  (* | (0, -1) -> (y - (x mod 2), x + 1) *)
+  (* | (0, 1)  -> (y - (x mod 2), x - 1) *)
+  (* | (1, 1)  -> (y, x - 2) *)
+  (* | (1, 0)  -> (y + 1 - (x mod 2), x - 1) *)
+  (* | (-1, 0) -> (y + 1 - (x mod 2)x + 1) *)
+  (* | _       -> failwith "Invalid direction pattern." *)
+
   let get_adj_case (x, y) =
     function
-      | (0, 0)  -> (x - 2, y)
-      | (0, -1) -> (x - 1, y + (x mod 2))
-      | (0, 1)  -> (x + 1, y + (x mod 2))
-      | (1, 1)  -> (x + 2, y)
-      | (1, 0)  -> (x + 1, y - 1 + (x mod 2))
-      | (-1, 0) -> (x - 1, y - 1 + (x mod 2))
+      | (0, 0)  -> (x + 2, y)
+      | (0, -1) -> (x + 1, y - (x mod 2))
+      | (0, 1)  -> (x - 1, y - (x mod 2))
+      | (1, 1)  -> (x - 2, y)
+      | (1, 0)  -> (x - 1, y + 1 - (x mod 2))
+      | (-1, 0) -> (x + 1, y + 1 - (x mod 2))
       | _       -> failwith "Invalid direction pattern."
 
   let set_dir_pattern case =
     function
-      | (0, 0)       -> set_side case Door 3
-      | (0, -1)      -> set_side case Door 4
-      | (0, 1)       -> set_side case Door 5
-      | (1, 1)       -> set_side case Door 0
-      | (1, 0)       -> set_side case Door 1
-      | (-1, 0)      -> set_side case Door 2
+      | (0, 0)       -> set_side case Door 0
+      | (0, -1)      -> set_side case Door 1
+      | (0, 1)       -> set_side case Door 2
+      | (1, 1)       -> set_side case Door 3
+      | (1, 0)       -> set_side case Door 4
+      | (-1, 0)      -> set_side case Door 5
       | _     -> failwith "Invalid direction pattern."
 
   let get_sprite =
@@ -201,7 +211,7 @@ struct
       | _       -> failwith "Invalid wall asked."
 
   let calc_width_pos (x, y) sc_size sc_begin =
-    (sc_size - (76 * y) - 100 + sc_begin + (1 - (x mod 2)) * 38)
+    (sc_size - (76 * y) - 100 + sc_begin + (x mod 2) * 38)
 
   let calc_high_pos x sc_size sc_begin =
     (sc_size - (22 * x) - 43 + sc_begin)

@@ -10,6 +10,7 @@ NAME	=	step4
 ML	=	Case.ml		\
 		Maze.ml		\
 		DrawSdl.ml	\
+		Draw.ml		\
 		Pathfinder.ml	\
 		main.ml
 
