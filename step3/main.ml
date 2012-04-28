@@ -18,14 +18,12 @@ let main () =
   in
 
   if !len > 0 && !hig > 0 then
-    let ma =
-      (Maze.colorize (Maze.create !len !hig) !len !hig)
-    in
-    begin
-      Draw.print_maze ma !len !hig;
-      Draw.print_maze_numbers (Pathfinder.run ma  (Random.int !hig, Random.int !len) (Random.int !hig, Random.int !len)) !len !hig;
-      DrawSdl.print_maze ma !len !hig
-    end
+    DrawSdl.print_maze
+      (Pathfinder.run
+	 (Maze.colorize
+	    (Maze.create !len !hig) !len !hig)
+	 (Random.int !hig, Random.int !len)
+	 (Random.int !hig, Random.int !len)) !len !hig
   else
     prerr_endline "Bad arguments. X & Y must be > 0."
 
@@ -36,4 +34,4 @@ let _ =
   with
     | Failure "int_of_string"   ->
       prerr_endline ("Cannot transform characters into numbers.")
-(*  catch *)
+    | _				-> prerr_endline ("An error occured.")
