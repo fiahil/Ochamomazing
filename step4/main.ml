@@ -7,7 +7,8 @@
 let len = ref 0
 let hig = ref 0
 
-module SqMaze = Maze.MakeMaze (Case.Case)
+module SqMaze = Maze.MakeMaze (Case.Hexa)
+module HeMaze = Maze.MakeMaze (Case.Hexa)
 module SqPrint = Draw.MakePrinter (SqMaze)
 
 let selectDim v =
@@ -25,7 +26,7 @@ let main () =
       let maze = SqMaze.colorize (SqMaze.create !len !hig) !len !hig
       in
 
-      SqPrint.print_maze maze !len !hig;
+      (* SqPrint.print_maze maze !len !hig; *)
       SqPrint.print_maze_numbers maze !len !hig
     end
   else
@@ -38,4 +39,4 @@ let _ =
   with
     | Failure "int_of_string"   ->
       prerr_endline ("Cannot transform characters into numbers.")
-    (* | _                         -> prerr_endline ("An error occured.") *)
+(* | _                         -> prerr_endline ("An error occured.") *)
