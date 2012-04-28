@@ -25,6 +25,8 @@ sig
   val set_dir_pattern : case -> int * int -> case
   val statement : case -> int -> elt
   val create : int -> case
+  val calc_width_pos : int * int -> int -> int -> int
+  val calc_high_pos : int -> int -> int -> int
 end
 
 module Square : CASE =
@@ -96,6 +98,12 @@ struct
       | 2       -> wall_2
       | 3       -> wall_3
       | _       -> failwith "Invalid sprite number asked"
+
+  let calc_width_pos (x, y) sc_size sc_begin =
+    (sc_size - (50 * y) - 50 + sc_begin)
+
+  let calc_high_pos x sc_size sc_begin =
+    (sc_size - (50 * x) - 50 + sc_begin)
 
 end
 
@@ -174,12 +182,12 @@ struct
 
   let set_dir_pattern case =
     function
-      | (0, 0)       -> set_side case Door 0
-      | (0, -1)      -> set_side case Door 1
-      | (0, 1)       -> set_side case Door 2
-      | (1, 1)       -> set_side case Door 3
-      | (1, 0)       -> set_side case Door 4
-      | (-1, 0)      -> set_side case Door 5
+      | (0, 0)       -> set_side case Door 3
+      | (0, -1)      -> set_side case Door 4
+      | (0, 1)       -> set_side case Door 5
+      | (1, 1)       -> set_side case Door 0
+      | (1, 0)       -> set_side case Door 1
+      | (-1, 0)      -> set_side case Door 2
       | _     -> failwith "Invalid direction pattern."
 
   let get_sprite =
@@ -191,5 +199,11 @@ struct
       | 4       -> wall_4
       | 5       -> wall_5
       | _       -> failwith "Invalid wall asked."
+
+  let calc_width_pos (x, y) sc_size sc_begin =
+    (sc_size - (76 * y) - 280 + sc_begin + (1 - (x mod 2)) * 38)
+
+  let calc_high_pos x sc_size sc_begin =
+    (sc_size - (22 * x) - 150 + sc_begin)
 
 end

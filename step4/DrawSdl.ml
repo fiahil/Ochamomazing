@@ -1,3 +1,5 @@
+(* a virer  *)
+
 open Sdlevent
 open Sdlkey
 
@@ -30,8 +32,10 @@ struct
 
     let draw_img (x, y) sprite =   (* faire un draw something *)
       let position_of_image = Sdlvideo.rect
-        (!screen_width - (76 * y) - 280 + !width_begin + (1 - (x mod 2)) * 38)
-        (!screen_high - (22 * x) - 150 + !high_begin)
+        (Val.Elt.calc_width_pos (x, y) !screen_width !width_begin)
+        (Val.Elt.calc_high_pos x !screen_high !high_begin)
+        (* (sc_size - (76 * y) - 280 + sc_begin + (1 - (x mod 2)) * 38) *)
+        (* (!screen_high - (22 * x) - 150 + !high_begin) *)
         0 0
       in
       Sdlvideo.blit_surface ~dst_rect:position_of_image ~src:sprite ~dst:screen ()
@@ -164,9 +168,9 @@ struct
     begin
       map_width := (112 * (width + 1));
       map_high := 40 * high;
-      high_begin := ex * 50;
-      width_begin := ey * 50;
-      init_sizes (!map_width < !screen_width, !map_high < !screen_high);
+      high_begin := ex * 40;
+      width_begin := ey * 40;
+      (* init_sizes (!map_width < !screen_width, !map_high < !screen_high); *)
       let screen = init_sdl high width
       in
 
