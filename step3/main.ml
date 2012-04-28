@@ -19,7 +19,7 @@ let main () =
 
   if !len > 0 && !hig > 0 then
     DrawSdl.print_maze
-      (Pathfinder.run
+      (Pathfinder.solve
 	 (Maze.colorize
 	    (Maze.create !len !hig) !len !hig)
 	 (Random.int !hig, Random.int !len)

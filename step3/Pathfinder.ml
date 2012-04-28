@@ -6,7 +6,7 @@
  *
  *)
 
-let run maze entry out =
+let solve maze entry out =
   let comp_tuple (f1, s1) (f2, s2) =
     ((f1 = f2) && (s1 = s2))
   in
@@ -25,23 +25,34 @@ let run maze entry out =
     Case.statement (Maze.get_case_at_pos maze cur) di
   in
 
-  let at_right = function
-    | 0	-> 1
-    | 1	-> 2
-    | 2	-> 3
-    | 3	-> 0
-    | _	-> failwith "Impossible direction"
+  let at_right =
+    function
+      | 0	-> 1
+      | 1	-> 2
+      | 2	-> 3
+      | 3	-> 0
+      | _	-> failwith "Impossible direction."
   in
 
   let color_path old current dir =
     function
-      | (0, _)	-> (test_end (Maze.set_color_at_pos maze current 1) (comp_tuple current out), at_right dir, stat current (at_right dir))
-      | (1, 1)  -> (ret_current (Maze.set_color_at_pos maze old 0) current, at_right dir, stat current (at_right dir))
-      | (2, 1)  -> (ret_current (Maze.set_color_at_pos maze old 0) current, at_right dir, stat current (at_right dir))
-      | _	-> failwith "Impossibruuu !"
+      | (0, _)	->
+	(test_end
+	   (Maze.set_color_at_pos maze current 1)
+	   (comp_tuple current out), at_right dir, stat current (at_right dir))
+      | (1, 1)	->
+	(ret_current
+	   (Maze.set_color_at_pos maze old 0)
+	   current, at_right dir, stat current (at_right dir))
+      | (2, 1)	->
+	(ret_current
+	   (Maze.set_color_at_pos maze old 0)
+	   current, at_right dir, stat current (at_right dir))
+      | _	-> failwith "Impossible color pattern."
    in
 
-  let get_color pos = Case.color (Maze.get_case_at_pos maze pos)
+  let get_color pos =
+    Case.color (Maze.get_case_at_pos maze pos)
   in
 
   let move_path =
@@ -54,20 +65,14 @@ let run maze entry out =
 	  color_path (cx, cy) (cx - 1, cy) 2 (get_color (cx - 1, cy), get_color (cx, cy))
       | ((cx, cy), 3)	->
 	  color_path (cx, cy) (cx, cy + 1) 3 (get_color (cx, cy + 1), get_color (cx, cy))
-      | _		-> failwith "Execution fatal error"
-  in
-
-  let print_pos ((x, y), dir, stat) =
-    begin
-      ((x, y), dir, stat)
-    end
+      | _		-> failwith "Execution fatal error."
   in
 
   let rec in_find =
     function
       | ((-42, -42), _, _)		-> maze
       | (current, dir, Case.Door)	->
-	  in_find (print_pos (move_path (current, dir)))
+	  in_find (move_path (current, dir))
       | (current, 0, _)			->
 	  in_find (current, 3, stat current 3)
       | (current, 1, _)			->
@@ -78,8 +83,12 @@ let run maze entry out =
 	  in_find (current, 2, stat current 2)
       | _				-> failwith "Execution fatal error"
   in
+
   if (comp_tuple entry out) then
     maze
   else
-    in_find (entry, 0, (Case.statement (Maze.get_case_at_pos maze (Maze.set_color_at_pos maze entry 2)) 0))
-;;
+    in_find (entry, 0,
+	     (Case.statement
+		(Maze.get_case_at_pos maze
+		   (Maze.set_color_at_pos maze entry 2)) 0))
+
