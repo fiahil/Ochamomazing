@@ -24,10 +24,6 @@ struct
   let screen_width      = ref 1200
   let screen_high       = ref 800
 
-  let path     = Sdlloader.load_image "./img/path.png"
-  let enter    = Sdlloader.load_image "./img/enter.png"
-  let out      = Sdlloader.load_image "./img/out.png"
-
   let draw_maze screen maze width high =
 
     let draw_img (x, y) sprite =   (* faire un draw something *)
@@ -65,11 +61,11 @@ struct
       draw_img (x, y) Val.Elt.empty;
       manage_draw_walls (x, y) (Val.Elt.numberSides - 1);
       if Val.get_color_at_pos maze (x, y) = 2 then
-        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:enter ~dst:screen ()
+	Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.enter ~dst:screen ()
       else if Val.get_color_at_pos maze (x, y) = 3 then
-        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:out ~dst:screen ()
+	Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.out ~dst:screen ()
       else if Val.get_color_at_pos maze (x, y) != 0 then
-        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:path ~dst:screen ()
+	Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.path ~dst:screen ()
       else
         ()
     in
