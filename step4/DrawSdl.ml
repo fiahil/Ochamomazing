@@ -30,8 +30,8 @@ struct
 
     let draw_img (x, y) sprite =   (* faire un draw something *)
       let position_of_image = Sdlvideo.rect
-        (!screen_width - (50 * y) - 50 + !width_begin)
-        (!screen_high - (50 * x) - 50 + !high_begin)
+        (!screen_width - (76 * y) - 280 + !width_begin + (1 - (x mod 2)) * 38)
+        (!screen_high - (22 * x) - 150 + !high_begin)
         0 0
       in
       Sdlvideo.blit_surface ~dst_rect:position_of_image ~src:sprite ~dst:screen ()
@@ -52,22 +52,22 @@ struct
     in
 
     let draw_case (x, y) =
-      let position_of_path = Sdlvideo.rect
-        (!screen_width - (50 * y) - 50 + !width_begin)
-        (!screen_high - (50 * x) - 50 + !high_begin)
-        0 0
-      in
+      (*      let position_of_path = Sdlvideo.rect
+              (!screen_width - (73 * y) - 50 + !width_begin + (x mod 2) * 35)
+              (!screen_high - (22 * x) - 40 + !high_begin)
+              0 0
+              in*)
 
       draw_img (x, y) Val.Elt.empty;
-      manage_draw_walls (x, y) (Val.Elt.numberSides - 1);
-      if Val.get_color_at_pos maze (x, y) = 2 then
-        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:enter ~dst:screen ()
-      else if Val.get_color_at_pos maze (x, y) = 3 then
-        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:out ~dst:screen ()
-      else if Val.get_color_at_pos maze (x, y) != 0 then
-        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:path ~dst:screen ()
-      else
-        ()
+      manage_draw_walls (x, y) (Val.Elt.numberSides - 1)
+    (*      if Val.get_color_at_pos maze (x, y) = 2 then
+            Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:enter ~dst:screen ()
+            else if Val.get_color_at_pos maze (x, y) = 3 then
+            Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:out ~dst:screen ()
+            else if Val.get_color_at_pos maze (x, y) != 0 then
+            Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:path ~dst:screen ()
+            else
+            ()*)
     in
 
     let rec draw =
@@ -162,8 +162,8 @@ struct
 
   let print_maze maze (ex, ey) width high =
     begin
-      map_width := 50 * width;
-      map_high := 50 * high;
+      map_width := (112 * (width + 1));
+      map_high := 40 * high;
       high_begin := ex * 50;
       width_begin := ey * 50;
       init_sizes (!map_width < !screen_width, !map_high < !screen_high);
