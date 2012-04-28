@@ -8,7 +8,6 @@ let len = ref 0
 let hig = ref 0
 
 module SqMaze = Maze.MakeMaze (Case.Case)
-module SqPrint = Draw.MakePrinter (SqMaze)
 
 let selectDim v =
   if !len = 0 then
@@ -25,8 +24,9 @@ let main () =
       let maze = SqMaze.colorize (SqMaze.create !len !hig) !len !hig
       in
 
-      SqPrint.print_maze maze !len !hig;
-      SqPrint.print_maze_numbers maze !len !hig
+      print_endline "TOO"
+      (* SqPrint.print_maze maze !len !hig; *)
+      (* SqPrint.print_maze_numbers maze !len !hig *)
     end
   else
     prerr_endline "Bad arguments. X & Y must be > 0."
