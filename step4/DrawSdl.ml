@@ -28,7 +28,7 @@ struct
 
   let draw_maze screen maze width high =
 
-    let draw_wall (x, y) sprite =   (* faire un draw something *)
+    let draw_img (x, y) sprite =   (* faire un draw something *)
       let position_of_image = Sdlvideo.rect
         (!screen_width - (50 * y) - 50 + !width_begin)
         (!screen_high - (50 * x) - 50 + !high_begin)
@@ -44,7 +44,7 @@ struct
           begin
             if (Val.Elt.statement (Val.get_case_at_pos maze (x, y)) n == Val.Elt.Wall)
             then
-              draw_wall (x, y) (Val.Elt.get_sprite n)
+              draw_img (x, y) (Val.Elt.get_sprite n)
             else
               ();
             manage_draw_walls (x, y) (n - 1)
@@ -52,21 +52,13 @@ struct
     in
 
     let draw_case (x, y) =
-      let position_of_image = Sdlvideo.rect
-        (!screen_width - (50 * y) - 50 + !width_begin)
-        (!screen_high - (50 * x) - 50 + !high_begin)
-        0 0
-      in
-
       let position_of_path = Sdlvideo.rect
         (!screen_width - (50 * y) - 50 + !width_begin)
         (!screen_high - (50 * x) - 50 + !high_begin)
         0 0
       in
 
-      Sdlvideo.blit_surface ~dst_rect:position_of_image ~src:
-        Val.Elt.empty
-        ~dst:screen ();
+      draw_img (x, y) Val.Elt.empty;
       manage_draw_walls (x, y) (Val.Elt.numberSides - 1);
       if Val.get_color_at_pos maze (x, y) = 2 then
         Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:enter ~dst:screen ()

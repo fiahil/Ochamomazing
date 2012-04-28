@@ -19,7 +19,6 @@ sig
   val color : case -> int
   val set_color : case -> int -> case
   val set_side : case -> elt -> int -> case
-  val get_sides : case -> (elt * elt * elt * elt)
   val get_adj_case : int * int -> int * int -> int * int
   val get_opposed_wall : int * int -> int * int
   val get_dir_pattern : int -> int * int
@@ -100,7 +99,7 @@ struct
 
 end
 
-module Hexa = (* : CASE *)
+module Hexa : CASE =
 struct
   type elt =
     | Wall
@@ -110,7 +109,13 @@ struct
 
   let numberSides = 6
 
-  let empty  = Sdlloader.load_image "./img/Square/base.jpg"
+  let empty  = Sdlloader.load_image "./img/Hexa/base.png"
+  let wall_0 = Sdlloader.load_image "./img/Hexa/Wall_0.png"
+  let wall_1 = Sdlloader.load_image "./img/Hexa/Wall_1.png"
+  let wall_2 = Sdlloader.load_image "./img/Hexa/Wall_2.png"
+  let wall_3 = Sdlloader.load_image "./img/Hexa/Wall_3.png"
+  let wall_4 = Sdlloader.load_image "./img/Hexa/Wall_4.png"
+  let wall_5 = Sdlloader.load_image "./img/Hexa/Wall_5.png"
 
   let color c = c.color
 
@@ -178,6 +183,13 @@ struct
       | _     -> failwith "Invalid direction pattern."
 
   let get_sprite =
-    empty
+    function
+      | 0       -> wall_0
+      | 1       -> wall_1
+      | 2       -> wall_2
+      | 3       -> wall_3
+      | 4       -> wall_4
+      | 5       -> wall_5
+      | _       -> failwith "Invalid wall asked."
 
 end

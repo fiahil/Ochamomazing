@@ -7,7 +7,7 @@
 let len = ref 0
 let hig = ref 0
 
-module SqMaze = Maze.MakeMaze (Case.Square)
+module SqMaze = Maze.MakeMaze (Case.Hexa)
 (* module HeMaze = Maze.MakeMaze (Case.Hexa) *)
 module SqPrint = DrawSdl.MakeDraw (SqMaze)
 module SqSolve = Pathfinder.MakePathfinder (SqMaze)
@@ -41,8 +41,8 @@ let _ =
   try
     main ()
   with
-    | Failure "int_of_string"			->
+    | Failure "int_of_string"                   ->
       prerr_endline ("Cannot transform characters into numbers.")
-    | Failure "Invalid wall combination"	->
+    | Failure "Invalid wall combination"        ->
       prerr_endline "Maze too small."
     | _                         -> prerr_endline ("An error occured.")
