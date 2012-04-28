@@ -66,7 +66,11 @@ struct
 	  (ret_current
 	     (Val.set_color_at_pos maze old 0)
 	     current, at_right dir, stat current (at_right dir))
-	| _	-> failwith "Impossible color pattern."
+	| (x, y)	->
+	  failwith ("Impossible color pattern: " ^
+	    (string_of_int x) ^
+	    ", " ^
+	    (string_of_int y))
     in
 
     let get_color pos =

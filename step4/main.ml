@@ -7,7 +7,7 @@
 let len = ref 0
 let hig = ref 0
 
-module SqMaze = Maze.MakeMaze (Case.Square)
+module SqMaze = Maze.MakeMaze (Case.Hexa)
 (* module HeMaze = Maze.MakeMaze (Case.Hexa) *)
 module SqPrint = DrawSdl.MakeDraw (SqMaze)
 module SqSolve = Pathfinder.MakePathfinder (SqMaze)
