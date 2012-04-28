@@ -50,8 +50,6 @@ struct
     in
 
     let draw_case (x, y) =
-      (* SDL_FillRect(sdl_screen,NULL, 0x000000); *)
-      (* SDL_Flip(sdl_screen); *)
       let position_of_path = Sdlvideo.rect
         (Val.Elt.calc_width_pos (x, y) !screen_width !width_begin)
         (Val.Elt.calc_high_pos x !screen_high !high_begin)
@@ -61,11 +59,11 @@ struct
       draw_img (x, y) Val.Elt.empty;
       manage_draw_walls (x, y) (Val.Elt.numberSides - 1);
       if Val.get_color_at_pos maze (x, y) = 2 then
-	Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.enter ~dst:screen ()
+        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.enter ~dst:screen ()
       else if Val.get_color_at_pos maze (x, y) = 3 then
-	Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.out ~dst:screen ()
+        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.out ~dst:screen ()
       else if Val.get_color_at_pos maze (x, y) != 0 then
-	Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.path ~dst:screen ()
+        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.path ~dst:screen ()
       else
         ()
     in
@@ -166,7 +164,6 @@ struct
 
   let print_maze maze (ex, ey) width high =
     begin
-      Printf.printf "Width %d\n" width;
       map_width := Val.Elt.calc_map_width width;
       map_high := Val.Elt.calc_map_high high;
       high_begin := 0;

@@ -241,7 +241,7 @@ struct
     (sc_size - (22 * x) - 43 + sc_begin)
 
   let calc_map_width width =
-    (200 * width)
+    (80 * width)
 
   let calc_map_high high =
     22 * (high + 1)
