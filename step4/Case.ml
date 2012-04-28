@@ -38,8 +38,11 @@ struct
 
   let numberSides = 4
 
-  let empty  = Sdlloader.load_image "./img/Square/empty_0.jpg"
-  let pokemon  = Sdlloader.load_image "./100.jpeg"
+  let empty  = Sdlloader.load_image "./img/Square/base.jpg"
+  let wall_0  = Sdlloader.load_image "./img/Square/Wall_0.png"
+  let wall_1  = Sdlloader.load_image "./img/Square/Wall_1.png"
+  let wall_2  = Sdlloader.load_image "./img/Square/Wall_2.png"
+  let wall_3  = Sdlloader.load_image "./img/Square/Wall_3.png"
 
   let color c = c.color
 
@@ -89,10 +92,10 @@ struct
 
   let get_sprite =
     function
-      | 0       -> pokemon
-      | 1       -> pokemon
-      | 2       -> pokemon
-      | 3       -> pokemon
+      | 0       -> wall_0
+      | 1       -> wall_1
+      | 2       -> wall_2
+      | 3       -> wall_3
       | _       -> failwith "Invalid sprite number asked"
 
 end
@@ -107,7 +110,7 @@ struct
 
   let numberSides = 6
 
-  let empty  = Sdlloader.load_image "./img/Square/empty_0.jpg"
+  let empty  = Sdlloader.load_image "./img/Square/base.jpg"
 
   let color c = c.color
 
