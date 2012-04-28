@@ -17,10 +17,10 @@ struct
 
   let map_high		= ref 0
   let map_width		= ref 0
-  let width_begin		= ref 0
-  let high_begin		= ref 0
+  let width_begin	= ref 0
+  let high_begin	= ref 0
   let screen_width	= ref 1200
-  let screen_high		= ref 800
+  let screen_high	= ref 800
 
   let empty_0  = Sdlloader.load_image "./img/Square/empty_0.jpg"
   let empty_1  = Sdlloader.load_image "./img/Square/empty_1.jpg"
