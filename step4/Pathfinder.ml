@@ -83,9 +83,9 @@ struct
 
     let rec in_find =
       function
-        | ((-42, -42), _, _)                      -> maze
-        | (current, dir, Val.Elt.Door)            -> in_find (move_path (current, dir))
-        | (current, dir, _)                       -> in_find (current, at_left dir, stat current (at_left dir))
+        | ((-42, -42), _, _)		-> maze
+        | (current, dir, Val.Elt.Door)	-> in_find (move_path (current, dir))
+        | (current, dir, _)		-> in_find (current, at_left dir, stat current (at_left dir))
     in
 
     if comp_tuple entry out then

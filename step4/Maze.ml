@@ -66,9 +66,6 @@ struct
     Val.color (Array.get maze.(x) y)
 
   let colorize maze width high =
-    (* let inverse_tuple (x, y) = (-x, -y) *)
-    (* in *)
-
     let get_rand_case () = (Random.int high, Random.int width)
     in
 
@@ -110,7 +107,6 @@ struct
 
     let change_case case dir =
       let change_wall case (x, y) =
-        Printf.printf "%d %d %d\n" x y (Val.color case);
         Val.set_dir_pattern case (x, y)
       in
 
