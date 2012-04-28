@@ -15,85 +15,74 @@ module MakeDraw (Val : Maze.MAKEMAZE) : MAKEDRAW
 struct
   type t = Val.maze
 
-  let map_high		= ref 0
-  let map_width		= ref 0
-  let width_begin		= ref 0
-  let high_begin		= ref 0
-  let screen_width	= ref 1200
-  let screen_high		= ref 800
+  let map_high          = ref 0
+  let map_width         = ref 0
+  let width_begin       = ref 0
+  let high_begin        = ref 0
+  let screen_width      = ref 1200
+  let screen_high       = ref 800
 
-  let empty_0  = Sdlloader.load_image "./img/Square/empty_0.jpg"
-  let empty_1  = Sdlloader.load_image "./img/Square/empty_1.jpg"
-  let empty_2  = Sdlloader.load_image "./img/Square/empty_2.jpg"
-  let empty_3  = Sdlloader.load_image "./img/Square/empty_3.jpg"
-  let empty_4  = Sdlloader.load_image "./img/Square/empty_4.jpg"
-  let empty_5  = Sdlloader.load_image "./img/Square/empty_5.jpg"
-  let empty_6  = Sdlloader.load_image "./img/Square/empty_6.jpg"
-  let empty_7  = Sdlloader.load_image "./img/Square/empty_7.jpg"
-  let empty_8  = Sdlloader.load_image "./img/Square/empty_8.jpg"
-  let empty_9  = Sdlloader.load_image "./img/Square/empty_9.jpg"
-  let empty_10 = Sdlloader.load_image "./img/Square/empty_10.jpg"
-  let empty_11 = Sdlloader.load_image "./img/Square/empty_11.jpg"
-  let empty_12 = Sdlloader.load_image "./img/Square/empty_12.jpg"
-  let empty_13 = Sdlloader.load_image "./img/Square/empty_13.jpg"
-  let empty_14 = Sdlloader.load_image "./img/Square/empty_14.jpg"
   let path     = Sdlloader.load_image "./img/path.png"
   let enter    = Sdlloader.load_image "./img/enter.png"
   let out      = Sdlloader.load_image "./img/out.png"
 
   let draw_maze screen maze width high =
-    let pick_sprite =
+
+    let draw_wall (x, y) sprite =   (* faire un draw something *)
+      let position_of_image = Sdlvideo.rect
+        (!screen_width - (50 * y) - 50 + !width_begin)
+        (!screen_high - (50 * x) - 50 + !high_begin)
+        0 0
+      in
+      Sdlvideo.blit_surface ~dst_rect:position_of_image ~src:sprite ~dst:screen ()
+    in
+
+    let rec manage_draw_walls (x, y) =
       function
-	| (Val.Elt.Door, Val.Elt.Door, Val.Elt.Door, Val.Elt.Door)	-> empty_0
-	| (Val.Elt.Wall, Val.Elt.Door, Val.Elt.Door, Val.Elt.Door)	-> empty_1
-	| (Val.Elt.Door, Val.Elt.Door, Val.Elt.Door, Val.Elt.Wall)	-> empty_2
-	| (Val.Elt.Door, Val.Elt.Wall, Val.Elt.Door, Val.Elt.Door)	-> empty_3
-	| (Val.Elt.Door, Val.Elt.Door, Val.Elt.Wall, Val.Elt.Door)	-> empty_4
-	| (Val.Elt.Wall, Val.Elt.Door, Val.Elt.Door, Val.Elt.Wall)	-> empty_5
-	| (Val.Elt.Wall, Val.Elt.Wall, Val.Elt.Door, Val.Elt.Door)	-> empty_6
-	| (Val.Elt.Door, Val.Elt.Door, Val.Elt.Wall, Val.Elt.Wall)	-> empty_7
-	| (Val.Elt.Door, Val.Elt.Wall, Val.Elt.Wall, Val.Elt.Door)	-> empty_8
-	| (Val.Elt.Door, Val.Elt.Wall, Val.Elt.Door, Val.Elt.Wall)	-> empty_9
-	| (Val.Elt.Wall, Val.Elt.Door, Val.Elt.Wall, Val.Elt.Door)	-> empty_10
-	| (Val.Elt.Door, Val.Elt.Wall, Val.Elt.Wall, Val.Elt.Wall)	-> empty_11
-	| (Val.Elt.Wall, Val.Elt.Wall, Val.Elt.Door, Val.Elt.Wall)	-> empty_12
-	| (Val.Elt.Wall, Val.Elt.Wall, Val.Elt.Wall, Val.Elt.Door)	-> empty_13
-	| (Val.Elt.Wall, Val.Elt.Door, Val.Elt.Wall, Val.Elt.Wall)	-> empty_14
-	| _								->
-	  failwith "Invalid wall combination"
+        | -1    -> ()
+        | n     ->
+          begin
+            if (Val.Elt.statement (Val.get_case_at_pos maze (x, y)) n == Val.Elt.Wall)
+            then
+              draw_wall (x, y) (Val.Elt.get_sprite n)
+            else
+              ();
+            manage_draw_walls (x, y) (n - 1)
+          end
     in
 
     let draw_case (x, y) =
       let position_of_image = Sdlvideo.rect
-	(!screen_width - (50 * y) - 50 + !width_begin)
-	(!screen_high - (50 * x) - 50 + !high_begin)
-	0 0
+        (!screen_width - (50 * y) - 50 + !width_begin)
+        (!screen_high - (50 * x) - 50 + !high_begin)
+        0 0
       in
 
       let position_of_path = Sdlvideo.rect
-	(!screen_width - (50 * y) - 50 + !width_begin)
-	(!screen_high - (50 * x) - 50 + !high_begin)
-	0 0
+        (!screen_width - (50 * y) - 50 + !width_begin)
+        (!screen_high - (50 * x) - 50 + !high_begin)
+        0 0
       in
 
       Sdlvideo.blit_surface ~dst_rect:position_of_image ~src:
-	(pick_sprite (Val.Elt.get_sides (Val.get_case_at_pos maze (x, y))))
-	~dst:screen ();
+        Val.Elt.empty
+        ~dst:screen ();
+      manage_draw_walls (x, y) (Val.Elt.numberSides - 1);
       if Val.get_color_at_pos maze (x, y) = 2 then
-	Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:enter ~dst:screen ()
+        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:enter ~dst:screen ()
       else if Val.get_color_at_pos maze (x, y) = 3 then
-	Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:out ~dst:screen ()
+        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:out ~dst:screen ()
       else if Val.get_color_at_pos maze (x, y) != 0 then
-	Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:path ~dst:screen ()
+        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:path ~dst:screen ()
       else
-	()
+        ()
     in
 
     let rec draw =
       function
-	| (0, -1)	-> ()
-	| (x, -1)	-> draw (x - 1, width - 1)
-	| (x, y)	->
+        | (0, -1)       -> ()
+        | (x, -1)       -> draw (x - 1, width - 1)
+        | (x, y)        ->
           begin
             draw_case (x, y);
             draw (x, y - 1)
@@ -106,39 +95,39 @@ struct
   let wait_for_escape screen maze width high =
     let manage_scroll cur max value screen_size =
       if max - (cur + value) >= screen_size && (cur + value) >= 0 then
-	cur + value
+        cur + value
       else
-	cur
+        cur
     in
 
     let rec wait () =
       match wait_event () with
-	| KEYDOWN {keysym=KEY_ESCAPE}	-> ()
-	| KEYDOWN {keysym=KEY_UP}		->
+        | KEYDOWN {keysym=KEY_ESCAPE}   -> ()
+        | KEYDOWN {keysym=KEY_UP}               ->
           begin
             high_begin := manage_scroll !high_begin !map_high 25 !screen_high;
             draw_maze screen maze width high;
             wait ()
           end
-	| KEYDOWN {keysym=KEY_DOWN}	->
+        | KEYDOWN {keysym=KEY_DOWN}     ->
           begin
             high_begin := manage_scroll !high_begin !map_high (-25) !screen_high;
             draw_maze screen maze width high;
             wait ()
           end
-	| KEYDOWN {keysym=KEY_LEFT}	->
+        | KEYDOWN {keysym=KEY_LEFT}     ->
           begin
             width_begin := manage_scroll !width_begin !map_width 25 !screen_width;
             draw_maze screen maze width high;
             wait ()
           end
-	| KEYDOWN {keysym=KEY_RIGHT}	->
+        | KEYDOWN {keysym=KEY_RIGHT}    ->
           begin
             width_begin := manage_scroll !width_begin !map_width (-25) !screen_width;
             draw_maze screen maze width high;
             wait ()
           end
-	| _				-> wait ()
+        | _                             -> wait ()
     in
 
     wait ()
@@ -150,34 +139,34 @@ struct
 
   let init_sizes =
     function
-      | (true, true)	->
-	begin
+      | (true, true)    ->
+        begin
           screen_width := !map_width;
           screen_high  := !map_high;
-	  high_begin := 0;
-	  width_begin := 0
-	end
-      | (true, false)	->
-	begin
-	  screen_width := !map_width;
-	  width_begin := 0;
-	  if (!high_begin > !map_high - !screen_high) then
-	    high_begin := !map_high - !screen_high
-	end
-      | (false, true)	->
-	begin
-	  screen_high := !map_high;
-	  high_begin := 0;
-	  if (!width_begin > !map_width - !screen_width) then
-	    width_begin := !map_width - !screen_width
-	end
-      | _			->
-	begin
-	  if (!high_begin > !map_high - !screen_high) then
-	    high_begin := !map_high - !screen_high;
-	  if (!width_begin > !map_width - !screen_width) then
-	    width_begin := !map_width - !screen_width
-	end
+          high_begin := 0;
+          width_begin := 0
+        end
+      | (true, false)   ->
+        begin
+          screen_width := !map_width;
+          width_begin := 0;
+          if (!high_begin > !map_high - !screen_high) then
+            high_begin := !map_high - !screen_high
+        end
+      | (false, true)   ->
+        begin
+          screen_high := !map_high;
+          high_begin := 0;
+          if (!width_begin > !map_width - !screen_width) then
+            width_begin := !map_width - !screen_width
+        end
+      | _                       ->
+        begin
+          if (!high_begin > !map_high - !screen_high) then
+            high_begin := !map_high - !screen_high;
+          if (!width_begin > !map_width - !screen_width) then
+            width_begin := !map_width - !screen_width
+        end
 
   let print_maze maze (ex, ey) width high =
     begin

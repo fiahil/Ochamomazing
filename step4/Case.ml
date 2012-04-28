@@ -14,6 +14,8 @@ sig
     | Door
 
   val numberSides : int
+  val empty : Sdlvideo.surface
+  val get_sprite : int -> Sdlvideo.surface
   val color : case -> int
   val set_color : case -> int -> case
   val set_side : case -> elt -> int -> case
@@ -35,6 +37,9 @@ struct
   type case = {color: int; sides: (elt * elt * elt * elt)}
 
   let numberSides = 4
+
+  let empty  = Sdlloader.load_image "./img/Square/empty_0.jpg"
+  let pokemon  = Sdlloader.load_image "./100.jpeg"
 
   let color c = c.color
 
@@ -81,6 +86,15 @@ struct
       | (-1, 0) -> set_side case Door 2
       | (0, 1)  -> set_side case Door 3
       | _       -> failwith "Invalid direction pattern."
+
+  let get_sprite =
+    function
+      | 0       -> pokemon
+      | 1       -> pokemon
+      | 2       -> pokemon
+      | 3       -> pokemon
+      | _       -> failwith "Invalid sprite number asked"
+
 end
 
 module Hexa = (* : CASE *)
@@ -92,6 +106,8 @@ struct
   type case = {color: int; sides: (elt * elt * elt * elt * elt * elt)}
 
   let numberSides = 6
+
+  let empty  = Sdlloader.load_image "./img/Square/empty_0.jpg"
 
   let color c = c.color
 
@@ -157,4 +173,8 @@ struct
       | (1, 0)       -> set_side case Door 4
       | (-1, 0)      -> set_side case Door 5
       | _     -> failwith "Invalid direction pattern."
+
+  let get_sprite =
+    empty
+
 end
