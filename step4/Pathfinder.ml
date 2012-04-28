@@ -55,19 +55,23 @@ struct
 
     let color_path old current dir =
       function
-        | (0, _)  ->
+        | (0, _)        ->
           (test_end
              (Val.set_color_at_pos maze current 1)
              (comp_tuple current out), at_right dir, stat current (at_right dir))
-        | (1, 1)  ->
+        | (1, 1)        ->
           (ret_current
              (Val.set_color_at_pos maze old 0)
              current, at_right dir, stat current (at_right dir))
-        | (2, 1)  ->
+        | (2, 1)        ->
           (ret_current
              (Val.set_color_at_pos maze old 0)
              current, at_right dir, stat current (at_right dir))
-        | _       -> failwith "Impossible color pattern."
+        | (x, y)        ->
+          failwith ("Impossible color pattern: " ^
+                       (string_of_int x) ^
+                       ", " ^
+                       (string_of_int y))
     in
 
     let get_color pos =

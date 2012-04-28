@@ -28,16 +28,16 @@ let main () =
         out = (Random.int !hig, Random.int !len)
     in
 
-    (* SqPrint.print_maze *)
-    (* (SqMaze.colorize *)
-    (* (SqMaze.create !len !hig) !len !hig) *)
-    (* entry !len !hig *)
-
     SqPrint.print_maze
-      (SqSolve.solve
-         (SqMaze.colorize
-            (SqMaze.create !len !hig) !len !hig) entry out)
+      (SqMaze.colorize
+         (SqMaze.create !len !hig) !len !hig)
       entry !len !hig
+
+  (* SqPrint.print_maze *)
+  (* (SqSolve.solve *)
+  (* (SqMaze.colorize *)
+  (* (SqMaze.create !len !hig) !len !hig) entry out) *)
+  (* entry !len !hig *)
   else
     prerr_endline "Bad arguments. X & Y must be > 0."
 
