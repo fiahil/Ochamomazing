@@ -5,10 +5,12 @@
 ## Fri Mar 16 2012
 ##
 
-NAME	=	step3
+NAME	=	step4
 
 ML	=	Case.ml		\
 		Maze.ml		\
+		DrawSdl.ml	\
+		Pathfinder.ml	\
 		main.ml
 
 MLI	=

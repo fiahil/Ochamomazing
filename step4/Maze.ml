@@ -16,6 +16,7 @@ sig
   val colorize : maze -> int -> int -> maze
   val get_case_at_pos : maze -> int * int -> Elt.case
   val set_color_at_pos : maze -> int * int -> int -> int * int
+  val get_color_at_pos : maze -> int * int -> int
 end
 
 module MakeMaze (Val : Case.CASE) : MAKEMAZE
@@ -30,26 +31,26 @@ struct
   let create width high =
     let rec create_line line value =
       function
-	| -1	-> line
-	| n	->
-	  begin
+	| -1      -> line
+	| n       ->
+          begin
             Array.set line n (Val.create value);
             create_line line (value + 1) (n - 1)
-	  end
+          end
     in
 
     let rec create_map map width =
       function
-	| -1	-> map
-	| n	->
-	  begin
+	| -1      -> map
+	| n       ->
+          begin
             Array.set map n
-	      (create_line
+              (create_line
 		 (Array.make width (Val.create (n * width)))
 		 (n * width)
 		 (width - 1));
             create_map map width (n - 1)
-	  end
+          end
     in
 
     create_map (Array.make high [||]) width (high - 1)
@@ -61,14 +62,22 @@ struct
     Array.set maze.(x) y (Val.set_color (get_case_at_pos maze (x, y)) col);
     (x, y)
 
+  let get_color_at_pos maze (x, y) =
+    Val.color (get_case_at_pos maze (x, y))
+
   let colorize maze width high =
     let inverse_tuple (x, y) = (-x, -y)
     in
 
-    let get_rand_case () = (Random.int width, Random.int high)
+    let get_rand_case () = (Random.int high, Random.int width)
     in
 
-    let get_rand_dir () = Val.get_dir_pattern (Random.int Elt.numberSides)
+    let get_rand_dir () =
+      match (Random.int 4) with
+	| 0       -> (0, 1)
+	| 1       -> (1, 0)
+	| 2       -> (0, -1)
+	| _       -> (-1, 0)
     in
 
     let check_position (x, y) =
@@ -81,26 +90,26 @@ struct
     let change_case_by_color color new_color =
       let rec change_columns x =
 	function
-          | -1	-> ()
-          | y	->
+          | -1    -> ()
+          | y     ->
             if (Val.color (get_case_at_pos maze (x, y)) = color)
             then
-	      begin
+              begin
 		Array.set maze.(x) y
-		  (Val.set_color (get_case_at_pos maze (x, y)) new_color);
+                  (Val.set_color (get_case_at_pos maze (x, y)) new_color);
 		change_columns x (y - 1)
-	      end
+              end
             else
-	      change_columns x (y - 1)
+              change_columns x (y - 1)
       in
 
       let rec change_lines =
 	function
-          | -1	-> ()
-          | x	->
+          | -1    -> ()
+          | x     ->
             begin
-	      change_columns x (width - 1);
-	      change_lines (x - 1)
+              change_columns x (width - 1);
+              change_lines (x - 1)
             end
       in
 
@@ -108,29 +117,32 @@ struct
     in
 
     let change_case case dir =
-      let change_wall case dir = Val.set_dir_pattern case dir
+      let change_wall case =
+	function
+          | (1, 0)        -> Val.set_side case Val.Door 0
+          | (0, -1)       -> Val.set_side case Val.Door 1
+          | (-1, 0)       -> Val.set_side case Val.Door 2
+          | (0, 1)        -> Val.set_side case Val.Door 3
+          | _             -> failwith "Invalid direction tuple."
       in
 
-
       if (check_position (add_tuple dir case) &&
-	    (Val.color (get_case_at_pos maze case) !=
+            (Val.color (get_case_at_pos maze case) !=
 		Val.color (get_case_at_pos maze (add_tuple dir case))))
       then
 	begin
-          Array.set maze.(fst (add_tuple dir case))
-	    (snd (add_tuple dir case))
-	    (change_wall
-	       (get_case_at_pos maze (add_tuple dir case))
-	       (inverse_tuple dir));
-          Array.set maze.(fst case)
-	    (snd case)
-	    (change_wall
-	       (get_case_at_pos maze case) dir);
+          Array.set maze.(fst (add_tuple dir case)) (snd (add_tuple dir case))
+            (change_wall
+               (get_case_at_pos maze (add_tuple dir case))
+               (inverse_tuple dir));
+          Array.set maze.(fst case) (snd case)
+            (change_wall
+               (get_case_at_pos maze case) dir);
           change_case_by_color
-	    (max (Val.color (get_case_at_pos maze (add_tuple dir case)))
-	       (Val.color (get_case_at_pos maze case)))
-	    (min (Val.color (get_case_at_pos maze (add_tuple dir case)))
-	       (Val.color (get_case_at_pos maze case)));
+            (max (Val.color (get_case_at_pos maze (add_tuple dir case)))
+               (Val.color (get_case_at_pos maze case)))
+            (min (Val.color (get_case_at_pos maze (add_tuple dir case)))
+               (Val.color (get_case_at_pos maze case)));
           1
 	end
       else
@@ -139,8 +151,8 @@ struct
 
     let rec change_cases =
       function
-	| 0	-> ()
-	| n	-> change_cases (n - (change_case (get_rand_case()) (get_rand_dir())))
+	| 0       -> ()
+	| n       -> change_cases (n - (change_case (get_rand_case()) (get_rand_dir())))
     in
 
     change_cases (width * high - 1);

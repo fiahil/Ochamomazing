@@ -10,7 +10,7 @@ type elt =
   | Wall
   | Door
 
-type case = {color: int; sides: (elt * elt * elt * elt)}
+type case
 
 val numberSides : int
 val color : case -> int
