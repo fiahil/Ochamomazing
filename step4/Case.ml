@@ -26,7 +26,7 @@ sig
   val create : int -> case
 end
 
-module Square =
+module Square : CASE =
 struct
   type elt =
     | Wall
@@ -83,7 +83,7 @@ struct
       | _       -> failwith "Invalid direction pattern."
 end
 
-module Hexa =
+module Hexa = (* : CASE *)
 struct
   type elt =
     | Wall
@@ -157,5 +157,4 @@ struct
       | (1, 0)       -> set_side case Door 4
       | (-1, 0)      -> set_side case Door 5
       | _     -> failwith "Invalid direction pattern."
-
 end
