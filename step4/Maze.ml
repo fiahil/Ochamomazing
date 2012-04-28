@@ -16,6 +16,7 @@ sig
   val colorize : maze -> int -> int -> maze
   val get_case_at_pos : maze -> int * int -> Elt.case
   val set_color_at_pos : maze -> int * int -> int -> int * int
+  val get_color_at_pos : maze -> int * int -> int
 end
 
 module MakeMaze (Val : Case.CASE) : MAKEMAZE
@@ -60,6 +61,9 @@ struct
   let set_color_at_pos maze (x, y) col =
     Array.set maze.(x) y (Val.set_color (get_case_at_pos maze (x, y)) col);
     (x, y)
+
+  let get_color_at_pos maze (x, y) =
+    Val.color (Array.get maze.(x) y)
 
   let colorize maze width high =
     (* let inverse_tuple (x, y) = (-x, -y) *)
@@ -244,7 +248,7 @@ struct
         | 0     -> ()
         | n     ->
           begin
-            print_maze_numbers maze width high;
+            (* print_maze_numbers maze width high; *)
             (* print_maze_state maze width high; *)
             change_cases (n - (change_case (get_rand_case()) (get_rand_dir())))
           end
