@@ -137,7 +137,7 @@ struct
       | 3 -> s
       | 4 -> sw
       | 5 -> nw
-      | _ -> failwith "A Square case have only 4 sides."
+      | _ -> failwith "A Hexagone case has only 6 sides."
 
   let set_side {color = col ; sides = (n, ne, se, s, sw, nw)} elt_Type =
     function
@@ -147,7 +147,7 @@ struct
       | 3       -> {color = col; sides = (n, ne, se, elt_Type, sw, nw)}
       | 4       -> {color = col; sides = (n, ne, se, s, elt_Type, nw)}
       | 5       -> {color = col; sides = (n, ne, se, s, sw, elt_Type)}
-      | _       -> failwith "A Square case have only 4 sides."
+      | _       -> failwith "A Hexagone case has only 6 sides."
 
   let create col = {color = col; sides = (Wall, Wall, Wall, Wall, Wall, Wall)}
 
@@ -168,7 +168,7 @@ struct
       | (1, 1)  -> (0, 0)
       | (1, 0)  -> (0, -1)
       | (-1, 0) -> (0, 1)
-      | _       -> failwith "Invalid direction pattern"
+      | _       -> failwith "Invalid direction pattern."
 
   let get_adj_case (x, y) =
     function
@@ -178,7 +178,7 @@ struct
       | (1, 1)  -> (x + 2, y)
       | (1, 0)  -> (x + 1, y - 1 + (x mod 2))
       | (-1, 0) -> (x - 1, y - 1 + (x mod 2))
-      | _       -> failwith "Invalid direction pattern"
+      | _       -> failwith "Invalid direction pattern."
 
   let set_dir_pattern case =
     function
