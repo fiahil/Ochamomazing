@@ -131,12 +131,12 @@ struct
 
   let statement {color = col; sides = (n, ne, se, s, sw, nw)} =
     function
-      | 3 -> n
-      | 4 -> ne
-      | 5 -> se
-      | 0 -> s
-      | 1 -> sw
-      | 2 -> nw
+      | 0 -> n
+      | 1 -> ne
+      | 2 -> se
+      | 3 -> s
+      | 4 -> sw
+      | 5 -> nw
       | _ -> failwith "A Hexagone case has only 6 sides."
 
   let set_side {color = col ; sides = (n, ne, se, s, sw, nw)} elt_Type =
@@ -170,14 +170,24 @@ struct
       | (-1, 0) -> (0, 1)
       | _       -> failwith "Invalid direction pattern."
 
+  (* let get_adj_case (x, y) = *)
+  (* function *)
+  (* | (0, 0)  -> (y, x + 2) *)
+  (* | (0, -1) -> (y - (x mod 2), x + 1) *)
+  (* | (0, 1)  -> (y - (x mod 2), x - 1) *)
+  (* | (1, 1)  -> (y, x - 2) *)
+  (* | (1, 0)  -> (y + 1 - (x mod 2), x - 1) *)
+  (* | (-1, 0) -> (y + 1 - (x mod 2)x + 1) *)
+  (* | _       -> failwith "Invalid direction pattern." *)
+
   let get_adj_case (x, y) =
     function
-      | (0, 0)  -> (x - 2, y)
-      | (0, -1) -> (x - 1, y + (x mod 2))
-      | (0, 1)  -> (x + 1, y + (x mod 2))
-      | (1, 1)  -> (x + 2, y)
-      | (1, 0)  -> (x + 1, y - 1 + (x mod 2))
-      | (-1, 0) -> (x - 1, y - 1 + (x mod 2))
+      | (0, 0)  -> (x + 2, y)
+      | (0, -1) -> (x + 1, y - (x mod 2))
+      | (0, 1)  -> (x - 1, y - (x mod 2))
+      | (1, 1)  -> (x - 2, y)
+      | (1, 0)  -> (x - 1, y + 1 - (x mod 2))
+      | (-1, 0) -> (x + 1, y + 1 - (x mod 2))
       | _       -> failwith "Invalid direction pattern."
 
   let set_dir_pattern case =
@@ -201,7 +211,7 @@ struct
       | _       -> failwith "Invalid wall asked."
 
   let calc_width_pos (x, y) sc_size sc_begin =
-    (sc_size - (76 * y) - 76 + sc_begin + (1 - (x mod 2)) * 38)
+    (sc_size - (76 * y) - 100 + sc_begin + (x mod 2) * 38)
 
   let calc_high_pos x sc_size sc_begin =
     (sc_size - (22 * x) - 43 + sc_begin)

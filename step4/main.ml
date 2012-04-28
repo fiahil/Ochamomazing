@@ -24,25 +24,22 @@ let main () =
   in
 
   if !len > 0 && !hig > 0 then
-    let entry = (Random.int !hig, Random.int !len)
+    (* let entry = (Random.int !hig, Random.int !len) *)
+    let entry = (5, 5)
     and
-    out = (Random.int !hig, Random.int !len)
+        out = (8, 2)
     in
 
-  (* SqPrint.print_maze *)
-  (* (SqMaze.colorize *)
-  (* (SqMaze.create !len !hig) !len !hig) *)
+    (* SqPrint.print_maze *)
+    (* (SqMaze.colorize *)
+    (* (SqMaze.create !len !hig) !len !hig) *)
     (* entry !len !hig *)
+    let maze = SqMaze.colorize (SqMaze.create !len !hig) !len !hig in
 
-    let value = (SqMaze.colorize (SqMaze.create !len !hig) !len !hig)
-    in
-
-    SqNum.print_maze_numbers value !len !hig;
-    flush_all;
-    SqPrint.print_maze
-      (SqSolve.solve
-	 value entry out)
-      entry !len !hig
+    SqMaze.set_color_at_pos maze (8, 2) 3;
+    SqSolve.solve maze entry out;
+    SqPrint.print_maze maze entry !len !hig;
+    ()
   else
     prerr_endline "Bad arguments. X & Y must be > 0."
 

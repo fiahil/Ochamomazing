@@ -20,6 +20,7 @@ module MakePathfinder (Val : Maze.MAKEMAZE) : MAKEPATHFINDER
 struct
   type t = Val.maze
 
+  (* module SqMaze = Maze.MakeMaze (Case.Hexa) *)
   module SqNum = Draw.MakePrinter (Val)
 
   let solve maze entry out =
@@ -84,6 +85,7 @@ struct
       let value = Val.Elt.get_adj_case pos (Val.Elt.get_dir_pattern dir)
       in
 
+      Printf.printf "New dir %d %d\n" (fst (Val.Elt.get_adj_case pos (Val.Elt.get_dir_pattern dir))) (snd (Val.Elt.get_adj_case pos (Val.Elt.get_dir_pattern dir)));
       color_path pos value dir (get_color value, get_color pos)
     in
 
@@ -91,17 +93,16 @@ struct
       function
         | ((-42, -42), _, _)                      -> maze
         | (current, dir, Val.Elt.Door)            ->
-	  begin
-	    Printf.printf "Deplacement: %d, %d -- %d\n" (fst current) (snd current) dir;
-	    SqNum.print_maze_numbers maze 10 10;
+          begin
+            SqNum.print_maze_numbers maze 10 10;
+            Printf.printf "Deplacement: %d, %d -- %d\n" (fst current) (snd current) dir;
             in_find (move_path (current, dir))
-	  end
+          end
         | (current, dir, _)                       ->
-	  begin
-	    Printf.printf "Rotation:    %d, %d -- %d\n" (fst current) (snd current) dir;
-	    SqNum.print_maze_numbers maze 10 10;
+          begin
+            (* Printf.printf "Rotation:    %d, %d -- %d\n" (fst current) (snd current) dir; *)
             in_find (current, at_left dir, stat current (at_left dir))
-	  end
+          end
     in
 
     if comp_tuple entry out then

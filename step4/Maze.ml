@@ -110,6 +110,7 @@ struct
 
     let change_case case dir =
       let change_wall case (x, y) =
+        Printf.printf "%d %d %d\n" x y (Val.color case);
         Val.set_dir_pattern case (x, y)
       in
 
