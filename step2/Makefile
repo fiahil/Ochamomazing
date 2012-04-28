@@ -9,13 +9,12 @@ NAME	=	step2
 
 ML	=	Case.ml		\
 		Maze.ml		\
-		Draw.ml		\
 		DrawSdl.ml	\
 		main.ml
 
 MLI	=	Case.mli	\
 		Maze.mli	\
-		Draw.mli
+		DrawSdl.mli
 
 CMO	=	$(ML:.ml=.cmo)
 
