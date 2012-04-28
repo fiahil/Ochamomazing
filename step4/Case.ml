@@ -31,6 +31,8 @@ sig
   val create : int -> case
   val calc_width_pos : int * int -> int -> int -> int
   val calc_high_pos : int -> int -> int -> int
+  val calc_map_width : int -> int
+  val calc_map_high : int -> int
 end
 
 module Square : CASE =
@@ -82,10 +84,10 @@ struct
 
   let get_opposed_dir =
     function
-      | 0	-> 2
-      | 1	-> 3
-      | 2	-> 0
-      | _	-> 1
+      | 0       -> 2
+      | 1       -> 3
+      | 2       -> 0
+      | _       -> 1
 
   let get_adj_case (x, y) (xdir, ydir) =
     (x + xdir, y + ydir)
@@ -118,6 +120,12 @@ struct
 
   let calc_high_pos x sc_size sc_begin =
     (sc_size - (50 * x) - 50 + sc_begin)
+
+  let calc_map_width width =
+    50 * width
+
+  let calc_map_high high =
+    50 * high
 
 end
 
@@ -189,22 +197,12 @@ struct
 
   let get_opposed_dir =
     function
-      | 0	-> 3
-      | 1	-> 4
-      | 2	-> 5
-      | 3	-> 0
-      | 4	-> 1
-      | _	-> 2
-
-  (* let get_adj_case (x, y) = *)
-  (* function *)
-  (* | (0, 0)  -> (y, x + 2) *)
-  (* | (0, -1) -> (y - (x mod 2), x + 1) *)
-  (* | (0, 1)  -> (y - (x mod 2), x - 1) *)
-  (* | (1, 1)  -> (y, x - 2) *)
-  (* | (1, 0)  -> (y + 1 - (x mod 2), x - 1) *)
-  (* | (-1, 0) -> (y + 1 - (x mod 2)x + 1) *)
-  (* | _       -> failwith "Invalid direction pattern." *)
+      | 0       -> 3
+      | 1       -> 4
+      | 2       -> 5
+      | 3       -> 0
+      | 4       -> 1
+      | _       -> 2
 
   let get_adj_case (x, y) =
     function
@@ -218,13 +216,13 @@ struct
 
   let set_dir_pattern case =
     function
-      | (0, 0)	-> set_side case Door 0
-      | (0, -1)	-> set_side case Door 1
-      | (0, 1)	-> set_side case Door 2
-      | (1, 1)	-> set_side case Door 3
-      | (1, 0)	-> set_side case Door 4
-      | (-1, 0)	-> set_side case Door 5
-      | _	-> failwith "Invalid direction pattern."
+      | (0, 0)  -> set_side case Door 0
+      | (0, -1) -> set_side case Door 1
+      | (0, 1)  -> set_side case Door 2
+      | (1, 1)  -> set_side case Door 3
+      | (1, 0)  -> set_side case Door 4
+      | (-1, 0) -> set_side case Door 5
+      | _       -> failwith "Invalid direction pattern."
 
   let get_sprite =
     function
@@ -241,5 +239,11 @@ struct
 
   let calc_high_pos x sc_size sc_begin =
     (sc_size - (22 * x) - 43 + sc_begin)
+
+  let calc_map_width width =
+    (88 * width - 38)
+
+  let calc_map_high high =
+    22 * (high + 1)
 
 end

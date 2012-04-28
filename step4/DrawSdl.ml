@@ -65,7 +65,7 @@ struct
       else if Val.get_color_at_pos maze (x, y) != 0 then
 	Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.path ~dst:screen ()
       else
-	()
+        ()
     in
 
     let rec draw =
@@ -119,8 +119,7 @@ struct
           end
         | _                             -> wait ()
     in
-
-    wait ()
+    wait()
 
   let init_sdl high width =
     Sdl.init [`VIDEO];
@@ -160,8 +159,8 @@ struct
 
   let print_maze maze (ex, ey) width high =
     begin
-      map_width := (88 * width - 38);
-      map_high := 22 * (high + 1);
+      map_width := Val.Elt.calc_map_width width;
+      map_high := Val.Elt.calc_map_high high;
       high_begin := 0;
       width_begin := 0;
       init_sizes (!map_width < !screen_width, !map_high < !screen_high);
@@ -169,6 +168,7 @@ struct
       in
 
       draw_maze screen maze width high;
+      (* Sdltimer.delay 1000 *)
       wait_for_escape screen maze width high
     end
 end
