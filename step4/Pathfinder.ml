@@ -20,6 +20,8 @@ module MakePathfinder (Val : Maze.MAKEMAZE) : MAKEPATHFINDER
 struct
   type t = Val.maze
 
+  module SqNum = Draw.MakePrinter (Val)
+
   let solve maze entry out =
     print_endline "J'esaye de solve";
     let comp_tuple (f1, s1) (f2, s2) =
@@ -91,11 +93,13 @@ struct
         | (current, dir, Val.Elt.Door)            ->
 	  begin
 	    Printf.printf "Deplacement: %d, %d -- %d\n" (fst current) (snd current) dir;
+	    SqNum.print_maze_numbers maze 10 10;
             in_find (move_path (current, dir))
 	  end
         | (current, dir, _)                       ->
 	  begin
 	    Printf.printf "Rotation:    %d, %d -- %d\n" (fst current) (snd current) dir;
+	    SqNum.print_maze_numbers maze 10 10;
             in_find (current, at_left dir, stat current (at_left dir))
 	  end
     in
@@ -107,6 +111,6 @@ struct
                (Val.Elt.statement
                   (Val.get_case_at_pos maze
                      (Val.set_color_at_pos maze entry 2)) 0));
-    Printf.printf "J'ai fait de la merde\n";
+    print_endline "J'ai fait de la merde";
     maze
 end

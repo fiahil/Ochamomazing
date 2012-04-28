@@ -182,13 +182,13 @@ struct
 
   let set_dir_pattern case =
     function
-      | (0, 0)       -> set_side case Door 0
-      | (0, -1)      -> set_side case Door 1
-      | (0, 1)       -> set_side case Door 2
-      | (1, 1)       -> set_side case Door 3
-      | (1, 0)       -> set_side case Door 4
-      | (-1, 0)      -> set_side case Door 5
-      | _     -> failwith "Invalid direction pattern."
+      | (0, 0)	-> set_side case Door 0
+      | (0, -1)	-> set_side case Door 1
+      | (0, 1)	-> set_side case Door 2
+      | (1, 1)	-> set_side case Door 3
+      | (1, 0)	-> set_side case Door 4
+      | (-1, 0)	-> set_side case Door 5
+      | _	-> failwith "Invalid direction pattern."
 
   let get_sprite =
     function
