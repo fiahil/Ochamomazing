@@ -7,7 +7,7 @@
 let len = ref 0
 let hig = ref 0
 
-module SqMaze = Maze.MakeMaze (Case.Hexa)
+module SqMaze = Maze.MakeMaze (Case.Square)
 (* module HeMaze = Maze.MakeMaze (Case.Hexa) *)
 module SqPrint = DrawSdl.MakeDraw (SqMaze)
 module SqSolve = Pathfinder.MakePathfinder (SqMaze)
@@ -24,20 +24,20 @@ let main () =
 
   if !len > 0 && !hig > 0 then
     let entry = (Random.int !hig, Random.int !len)
-    (* and *)
-    (* out = (Random.int !hig, Random.int !len) *)
+    and
+    out = (Random.int !hig, Random.int !len)
     in
 
-    SqPrint.print_maze
-      (SqMaze.colorize
-         (SqMaze.create !len !hig) !len !hig)
-      entry !len !hig
-
   (* SqPrint.print_maze *)
-  (* (SqSolve.solve *)
   (* (SqMaze.colorize *)
-  (* (SqMaze.create !len !hig) !len !hig) entry out) *)
+  (* (SqMaze.create !len !hig) !len !hig) *)
   (* entry !len !hig *)
+
+    SqPrint.print_maze
+      (SqSolve.solve
+	 (SqMaze.colorize
+	    (SqMaze.create !len !hig) !len !hig) entry out)
+      entry !len !hig
   else
     prerr_endline "Bad arguments. X & Y must be > 0."
 

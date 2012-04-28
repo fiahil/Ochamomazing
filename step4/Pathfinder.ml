@@ -21,7 +21,7 @@ struct
   type t = Val.maze
 
   let solve maze entry out =
-    Printf.printf "J'esaye de solve\n";
+    print_endline "J'esaye de solve";
     let comp_tuple (f1, s1) (f2, s2) =
       ((f1 = f2) && (s1 = s2))
     in
@@ -76,13 +76,10 @@ struct
 
     let get_color pos =
       Val.Elt.color (Val.get_case_at_pos maze pos)
-    and
-        get_new_case (x, y) (opx, opy) =
-      (x + opx, y + opy)
     in
 
     let move_path (pos, dir) =
-      let value = get_new_case pos (Val.Elt.get_dir_pattern dir)
+      let value = Val.Elt.get_adj_case pos (Val.Elt.get_dir_pattern dir)
       in
 
       color_path pos value dir (get_color value, get_color pos)
@@ -92,12 +89,18 @@ struct
       function
         | ((-42, -42), _, _)                      -> maze
         | (current, dir, Val.Elt.Door)            ->
-          in_find (move_path (current, dir))
+	  begin
+	    Printf.printf "Deplacement: %d, %d -- %d\n" (fst current) (snd current) dir;
+            in_find (move_path (current, dir))
+	  end
         | (current, dir, _)                       ->
-          in_find (current, at_left dir, stat current (at_left dir))
+	  begin
+	    Printf.printf "Rotation:    %d, %d -- %d\n" (fst current) (snd current) dir;
+            in_find (current, at_left dir, stat current (at_left dir))
+	  end
     in
 
-    if (comp_tuple entry out) then
+    if comp_tuple entry out then
       maze
     else
       in_find (entry, 0,
