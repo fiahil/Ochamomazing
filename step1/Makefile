@@ -27,10 +27,10 @@ FLAGS	=	-w Aelz
 CC	=	ocamlopt
 
 %.cmx: %.ml
-	$(CC) -o $@	-c $< $(FLAGS)
+	$(CC) -I +sdl bigarray.cmxa sdl.cmxa sdlloader.cmxa -o $@	-c $< $(FLAGS)
 
 %.cmo: %.ml
-	$(CC) -o $@	-c $< $(FLAGS)
+	$(CC) -I +sdl bigarray.cma sdl.cma sdlloader.cma -o $@		-c $< $(FLAGS)
 
 %.cmi: %.mli
 	$(CC) -o $@	-c $< $(FLAGS)
@@ -38,11 +38,11 @@ CC	=	ocamlopt
 all:	.dep $(CMI) $(NAME)
 
 $(NAME):	$(CMX)
-	$(CC) -o $(NAME) $(CMX)
+	$(CC) -I +sdl bigarray.cmxa sdl.cmxa sdlloader.cmxa -o $(NAME) $(CMX)
 
 byte:	CC = ocamlc
 byte:	clean $(CMI) $(CMO)
-	$(CC) -o $(NAME) $(CMO)
+	$(CC) -I +sdl bigarray.cma sdl.cma sdlloader.cma -o $(NAME) $(CMO)
 
 clean:
 	@rm -f $(CMO) $(CMX) $(CMI) *.o *.cmi *.cmo *.cmx && echo "clean done"

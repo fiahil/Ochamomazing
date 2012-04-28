@@ -22,43 +22,41 @@ let path     = Sdlloader.load_image "./img/path.png"
 
 let rec wait_for_escape () =
   match wait_event () with
-    | KEYDOWN {keysym=KEY_ESCAPE} ->
-      ()
-    | event ->
-      wait_for_escape ()
+    | KEYDOWN {keysym=KEY_ESCAPE}	-> ()
+    | _					-> wait_for_escape ()
 
 let draw_maze screen maze width high =
-
   let pick_sprite =
     function
-      | (Case.Door, Case.Door, Case.Door, Case.Door)        -> empty_0
-      | (Case.Wall, Case.Door, Case.Door, Case.Door)        -> empty_1
-      | (Case.Door, Case.Door, Case.Door, Case.Wall)        -> empty_2
-      | (Case.Door, Case.Wall, Case.Door, Case.Door)        -> empty_3
-      | (Case.Door, Case.Door, Case.Wall, Case.Door)        -> empty_4
-      | (Case.Wall, Case.Door, Case.Door, Case.Wall)        -> empty_5
-      | (Case.Wall, Case.Wall, Case.Door, Case.Door)        -> empty_6
-      | (Case.Door, Case.Door, Case.Wall, Case.Wall)        -> empty_7
-      | (Case.Door, Case.Wall, Case.Wall, Case.Door)        -> empty_8
-      | (Case.Door, Case.Wall, Case.Door, Case.Wall)        -> empty_9
-      | (Case.Wall, Case.Door, Case.Wall, Case.Door)        -> empty_10
-      | (Case.Door, Case.Wall, Case.Wall, Case.Wall)        -> empty_11
-      | (Case.Wall, Case.Wall, Case.Door, Case.Wall)        -> empty_12
-      | (Case.Wall, Case.Wall, Case.Wall, Case.Door)        -> empty_13
-      | (Case.Wall, Case.Door, Case.Wall, Case.Wall)        -> empty_14
-      | _                                                   -> failwith "Invalid wall combination"
+      | (Case.Door, Case.Door, Case.Door, Case.Door)	-> empty_0
+      | (Case.Wall, Case.Door, Case.Door, Case.Door)	-> empty_1
+      | (Case.Door, Case.Door, Case.Door, Case.Wall)	-> empty_2
+      | (Case.Door, Case.Wall, Case.Door, Case.Door)	-> empty_3
+      | (Case.Door, Case.Door, Case.Wall, Case.Door)	-> empty_4
+      | (Case.Wall, Case.Door, Case.Door, Case.Wall)	-> empty_5
+      | (Case.Wall, Case.Wall, Case.Door, Case.Door)	-> empty_6
+      | (Case.Door, Case.Door, Case.Wall, Case.Wall)	-> empty_7
+      | (Case.Door, Case.Wall, Case.Wall, Case.Door)	-> empty_8
+      | (Case.Door, Case.Wall, Case.Door, Case.Wall)	-> empty_9
+      | (Case.Wall, Case.Door, Case.Wall, Case.Door)	-> empty_10
+      | (Case.Door, Case.Wall, Case.Wall, Case.Wall)	-> empty_11
+      | (Case.Wall, Case.Wall, Case.Door, Case.Wall)	-> empty_12
+      | (Case.Wall, Case.Wall, Case.Wall, Case.Door)	-> empty_13
+      | (Case.Wall, Case.Door, Case.Wall, Case.Wall)	-> empty_14
+      | _						-> failwith "Invalid wall combination"
   in
 
   let draw_case (x, y) =
     let position_of_image = Sdlvideo.rect
       (!screen_width - 50 * y - 50)
       (!screen_high - 50 * x - 50)
-      0 0 in
+      0 0
+    in
+
     Sdlvideo.blit_surface ~dst_rect:position_of_image ~src:
       (pick_sprite (Case.get_sides (Maze.get_case_at_pos maze (x, y))))
       ~dst:screen ();
-    if Maze.get_color_at_pos maze (x, y) != 0
-    then
+    if Maze.get_color_at_pos maze (x, y) != 0 then
       Sdlvideo.blit_surface ~dst_rect:position_of_image ~src:path ~dst:screen ()
     else
       ()
@@ -66,9 +64,9 @@ let draw_maze screen maze width high =
 
   let rec draw =
     function
-      | (0, -1)        -> ()
-      | (x, -1)        -> draw (x - 1, width - 1)
-      | (x, y)        ->
+      | (0, -1)	-> ()
+      | (x, -1)	-> draw (x - 1, width - 1)
+      | (x, y)	->
         begin
           draw_case (x, y);
           draw (x, y - 1)
@@ -81,7 +79,6 @@ let draw_maze screen maze width high =
 
 let init_sdl high width =
   Sdl.init [`VIDEO];
-  (* at_exit Sdl.quit; *)
   screen_width := 50 * width;
   screen_high := 50 * high;
   Sdlvideo.set_video_mode !screen_width !screen_high [`DOUBLEBUF]

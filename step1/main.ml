@@ -14,7 +14,7 @@ let selectDim v =
     hig := int_of_string v
 
 let main () =
-  let _ = Arg.parse [] (selectDim) "usage: X Y"
+  let _ = Arg.parse [] (selectDim) "usage: X Y."
   in
 
   if !len > 0 && !hig > 0 then

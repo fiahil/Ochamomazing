@@ -6,4 +6,4 @@
  *
  *)
 
-val run : Maze.maze -> (int * int) -> (int * int) -> Maze.maze
+val solve : Maze.maze -> (int * int) -> (int * int) -> Maze.maze
