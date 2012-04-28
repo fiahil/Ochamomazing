@@ -43,11 +43,8 @@ struct
       Val.Elt.statement (Val.get_case_at_pos maze cur) di
     in
 
-    let at_right dir =
-      if dir >= (Val.Elt.numberSides - 1) then
-        0
-      else
-        dir + 1
+    let rec at_right dir =
+      at_left (Val.Elt.get_opposed_dir dir)
     and
         at_left dir =
       if dir <= 0 then

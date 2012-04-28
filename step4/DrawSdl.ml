@@ -61,16 +61,15 @@ struct
       in
 
       draw_img (x, y) Val.Elt.empty;
-      manage_draw_walls (x, y) (Val.Elt.numberSides - 1)
-
-    (* if Val.get_color_at_pos maze (x, y) = 2 then *)
-    (* Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:enter ~dst:screen () *)
-    (* else if Val.get_color_at_pos maze (x, y) = 3 then *)
-    (* Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:out ~dst:screen () *)
-    (* else if Val.get_color_at_pos maze (x, y) != 0 then *)
-    (* Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:path ~dst:screen () *)
-    (* else *)
-    (* () *)
+      manage_draw_walls (x, y) (Val.Elt.numberSides - 1);
+      if Val.get_color_at_pos maze (x, y) = 2 then
+	Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:enter ~dst:screen ()
+      else if Val.get_color_at_pos maze (x, y) = 3 then
+	Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:out ~dst:screen ()
+      else if Val.get_color_at_pos maze (x, y) != 0 then
+	Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:path ~dst:screen ()
+      else
+	()
     in
 
     let rec draw =

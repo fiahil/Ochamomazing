@@ -21,6 +21,7 @@ sig
   val set_side : case -> elt -> int -> case
   val get_adj_case : int * int -> int * int -> int * int
   val get_opposed_wall : int * int -> int * int
+  val get_opposed_dir : int -> int
   val get_dir_pattern : int -> int * int
   val set_dir_pattern : case -> int * int -> case
   val statement : case -> int -> elt
@@ -72,6 +73,13 @@ struct
 
   let get_opposed_wall (x, y) =
     (-x, -y)
+
+  let get_opposed_dir =
+    function
+      | 0	-> 2
+      | 1	-> 3
+      | 2	-> 0
+      | _	-> 1
 
   let get_adj_case (x, y) (xdir, ydir) =
     (x + xdir, y + ydir)
@@ -169,6 +177,15 @@ struct
       | (1, 0)  -> (0, -1)
       | (-1, 0) -> (0, 1)
       | _       -> failwith "Invalid direction pattern."
+
+  let get_opposed_dir =
+    function
+      | 0	-> 3
+      | 1	-> 4
+      | 2	-> 5
+      | 3	-> 0
+      | 4	-> 1
+      | _	-> 2
 
   (* let get_adj_case (x, y) = *)
   (* function *)

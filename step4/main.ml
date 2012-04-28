@@ -36,7 +36,7 @@ let main () =
     (* entry !len !hig *)
     let maze = SqMaze.colorize (SqMaze.create !len !hig) !len !hig in
 
-    SqMaze.set_color_at_pos maze (8, 2) 3;
+    (* SqMaze.set_color_at_pos maze (8, 2) 3; *)
     SqSolve.solve maze entry out;
     SqPrint.print_maze maze entry !len !hig;
     ()
