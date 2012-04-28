@@ -54,6 +54,8 @@ struct
     in
 
     let draw_case (x, y) =
+      (* SDL_FillRect(sdl_screen,NULL, 0x000000); *)
+      (* SDL_Flip(sdl_screen); *)
       let position_of_path = Sdlvideo.rect
         (Val.Elt.calc_width_pos (x, y) !screen_width !width_begin)
         (Val.Elt.calc_high_pos x !screen_high !high_begin)
@@ -83,6 +85,11 @@ struct
           end
     in
 
+    let clear_screen =
+      let clear = Sdlvideo.rect 0 0 !screen_width !screen_high in
+      Sdlvideo.fill_rect ~rect: clear screen (Sdlvideo.map_RGB screen Sdlvideo.black);
+    in
+    clear_screen;
     draw (high - 1, width - 1);
     Sdlvideo.flip screen
 
@@ -163,6 +170,7 @@ struct
 
   let print_maze maze (ex, ey) width high =
     begin
+      Printf.printf "Width %d\n" width;
       map_width := Val.Elt.calc_map_width width;
       map_high := Val.Elt.calc_map_high high;
       high_begin := 0;
