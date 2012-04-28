@@ -20,7 +20,7 @@ module MakePathfinder (Val : Maze.MAKEMAZE) : MAKEPATHFINDER
 struct
   type t = Val.maze
   (* module SqMaze = Maze.MakeMaze (Case.Hexa) *)
-  module SqNum = Draw.MakePrinter (Val)
+  module SqNum = DrawSdl.MakeDraw (Val)
 
   let solve maze entry out =
     print_endline "J'esaye de solve";
@@ -93,7 +93,7 @@ struct
         | ((-42, -42), _, _)                      -> maze
         | (current, dir, Val.Elt.Door)            ->
           begin
-            SqNum.print_maze_numbers maze 10 10;
+            SqNum.print_maze maze (5, 5) 10 10;
             Printf.printf "Deplacement: %d, %d -- %d\n" (fst current) (snd current) dir;
             in_find (move_path (current, dir))
           end
