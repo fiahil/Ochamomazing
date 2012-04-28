@@ -15,6 +15,9 @@ sig
 
   val numberSides : int
   val empty : Sdlvideo.surface
+  val path : Sdlvideo.surface
+  val out : Sdlvideo.surface
+  val enter : Sdlvideo.surface
   val get_sprite : int -> Sdlvideo.surface
   val color : case -> int
   val set_color : case -> int -> case
@@ -40,6 +43,9 @@ struct
 
   let numberSides = 4
 
+  let path     = Sdlloader.load_image "./img/Square/path.png"
+  let enter    = Sdlloader.load_image "./img/Square/enter.png"
+  let out      = Sdlloader.load_image "./img/Square/out.png"
   let empty  = Sdlloader.load_image "./img/Square/base.jpg"
   let wall_0  = Sdlloader.load_image "./img/Square/Wall_0.png"
   let wall_1  = Sdlloader.load_image "./img/Square/Wall_1.png"
@@ -125,6 +131,9 @@ struct
 
   let numberSides = 6
 
+  let path     = Sdlloader.load_image "./img/Hexa/path.png"
+  let enter    = Sdlloader.load_image "./img/Hexa/enter.png"
+  let out      = Sdlloader.load_image "./img/Hexa/out.png"
   let empty  = Sdlloader.load_image "./img/Hexa/base.png"
   let wall_0 = Sdlloader.load_image "./img/Hexa/Wall_0.png"
   let wall_1 = Sdlloader.load_image "./img/Hexa/Wall_1.png"
