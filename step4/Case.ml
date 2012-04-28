@@ -17,6 +17,7 @@ sig
   val color : case -> int
   val set_color : case -> int -> case
   val set_side : case -> elt -> int -> case
+  val get_sides : case -> (elt * elt * elt * elt)
   val get_adj_case : int * int -> int * int -> int * int
   val get_opposed_wall : int * int -> int * int
   val get_dir_pattern : int -> int * int
@@ -38,6 +39,9 @@ struct
   let color c = c.color
 
   let set_color {color = c; sides = si} col = {color = col; sides = si}
+
+  let get_sides {color = c; sides = si} =
+    si
 
   let statement {color = col; sides = (n, e, s, w)} =
     function
