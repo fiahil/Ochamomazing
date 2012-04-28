@@ -138,16 +138,38 @@ let init_sizes =
     | (true, true)	->
       begin
         screen_width := !map_width;
-        screen_high  := !map_high
+        screen_high  := !map_high;
+	high_begin := 0;
+	width_begin := 0
       end
-    | (true, false)	-> screen_width := !map_width
-    | (false, true)	-> screen_high := !map_high
-    | _			-> ()
+    | (true, false)	->
+      begin
+	screen_width := !map_width;
+	width_begin := 0;
+	if (!high_begin > !map_high - !screen_high) then
+	  high_begin := !map_high - !screen_high
+      end
+    | (false, true)	->
+      begin
+	screen_high := !map_high;
+	high_begin := 0;
+	if (!width_begin > !map_width - !screen_width) then
+	  width_begin := !map_width - !screen_width
+      end
+    | _			->
+      begin
+	if (!high_begin > !map_high - !screen_high) then
+	  high_begin := !map_high - !screen_high;
+	if (!width_begin > !map_width - !screen_width) then
+	  width_begin := !map_width - !screen_width
+      end
 
-let print_maze maze width high =
+let print_maze maze (ex, ey) width high =
   begin
     map_width := 50 * width;
     map_high := 50 * high;
+    high_begin := ex * 50;
+    width_begin := ey * 50;
     init_sizes (!map_width < !screen_width, !map_high < !screen_high);
     let screen = init_sdl high width
     in

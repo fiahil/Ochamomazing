@@ -23,11 +23,11 @@ let main () =
 	out = (Random.int !hig, Random.int !len)
     in
 
-    DrawSdl.print_maze entry
+    DrawSdl.print_maze
       (Pathfinder.solve
 	 (Maze.colorize
 	    (Maze.create !len !hig) !len !hig)
-	 entry out) !len !hig
+	 entry out) entry !len !hig
   else
     prerr_endline "Bad arguments. X & Y must be > 0."
 
