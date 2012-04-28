@@ -18,12 +18,16 @@ let main () =
   in
 
   if !len > 0 && !hig > 0 then
-    DrawSdl.print_maze
+    let entry = (Random.int !hig, Random.int !len)
+    and
+	out = (Random.int !hig, Random.int !len)
+    in
+
+    DrawSdl.print_maze entry
       (Pathfinder.solve
 	 (Maze.colorize
 	    (Maze.create !len !hig) !len !hig)
-	 (Random.int !hig, Random.int !len)
-	 (Random.int !hig, Random.int !len)) !len !hig
+	 entry out) !len !hig
   else
     prerr_endline "Bad arguments. X & Y must be > 0."
 

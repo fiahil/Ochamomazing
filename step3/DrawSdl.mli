@@ -4,4 +4,4 @@
  * Fiahil
  *)
 
-val print_maze : Maze.maze -> int -> int -> unit
+val print_maze : Maze.maze -> (int * int) -> int -> int -> unit
