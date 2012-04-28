@@ -201,7 +201,7 @@ struct
       | _       -> failwith "Invalid wall asked."
 
   let calc_width_pos (x, y) sc_size sc_begin =
-    (sc_size - (76 * y) - 76 + sc_begin + (1 - (x mod 2)) * 38)
+    (sc_size - (76 * y) - 100 + sc_begin + (1 - (x mod 2)) * 38)
 
   let calc_high_pos x sc_size sc_begin =
     (sc_size - (22 * x) - 43 + sc_begin)
