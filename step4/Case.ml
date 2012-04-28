@@ -131,12 +131,12 @@ struct
 
   let statement {color = col; sides = (n, ne, se, s, sw, nw)} =
     function
-      | 0 -> n
-      | 1 -> ne
-      | 2 -> se
-      | 3 -> s
-      | 4 -> sw
-      | 5 -> nw
+      | 3 -> n
+      | 4 -> ne
+      | 5 -> se
+      | 0 -> s
+      | 1 -> sw
+      | 2 -> nw
       | _ -> failwith "A Hexagone case has only 6 sides."
 
   let set_side {color = col ; sides = (n, ne, se, s, sw, nw)} elt_Type =
@@ -182,12 +182,12 @@ struct
 
   let set_dir_pattern case =
     function
-      | (0, 0)       -> set_side case Door 3
-      | (0, -1)      -> set_side case Door 4
-      | (0, 1)       -> set_side case Door 5
-      | (1, 1)       -> set_side case Door 0
-      | (1, 0)       -> set_side case Door 1
-      | (-1, 0)      -> set_side case Door 2
+      | (0, 0)       -> set_side case Door 0
+      | (0, -1)      -> set_side case Door 1
+      | (0, 1)       -> set_side case Door 2
+      | (1, 1)       -> set_side case Door 3
+      | (1, 0)       -> set_side case Door 4
+      | (-1, 0)      -> set_side case Door 5
       | _     -> failwith "Invalid direction pattern."
 
   let get_sprite =
