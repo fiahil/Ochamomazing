@@ -19,6 +19,7 @@ module MakePathfinder (Val : Maze.MAKEMAZE) : MAKEPATHFINDER
 
 struct
   type t = Val.maze
+
   (* module SqMaze = Maze.MakeMaze (Case.Hexa) *)
   module SqNum = DrawSdl.MakeDraw (Val)
 
@@ -42,11 +43,8 @@ struct
       Val.Elt.statement (Val.get_case_at_pos maze cur) di
     in
 
-    let at_right dir =
-      if dir >= (Val.Elt.numberSides - 1) then
-        0
-      else
-        dir + 1
+    let rec at_right dir =
+      at_left (Val.Elt.get_opposed_dir dir)
     and
         at_left dir =
       if dir <= 0 then
@@ -93,7 +91,7 @@ struct
         | ((-42, -42), _, _)                      -> maze
         | (current, dir, Val.Elt.Door)            ->
           begin
-            SqNum.print_maze maze (5, 5) 10 10;
+            (* SqNum.print_maze maze (5, 5) 10 10; *)
             Printf.printf "Deplacement: %d, %d -- %d\n" (fst current) (snd current) dir;
             in_find (move_path (current, dir))
           end
@@ -111,6 +109,6 @@ struct
                (Val.Elt.statement
                   (Val.get_case_at_pos maze
                      (Val.set_color_at_pos maze entry 2)) 0));
-    Printf.printf "J'ai fait de la merde\n";
+    print_endline "J'ai fait de la merde";
     maze
 end

@@ -11,6 +11,7 @@ module SqMaze = Maze.MakeMaze (Case.Hexa)
 (* module HeMaze = Maze.MakeMaze (Case.Hexa) *)
 module SqPrint = DrawSdl.MakeDraw (SqMaze)
 module SqSolve = Pathfinder.MakePathfinder (SqMaze)
+module SqNum = Draw.MakePrinter (SqMaze)
 
 let selectDim v =
   if !len = 0 then
@@ -23,10 +24,9 @@ let main () =
   in
 
   if !len > 0 && !hig > 0 then
-    (* let entry = (Random.int !hig, Random.int !len) *)
-    let entry = (5, 5)
+    let entry = (Random.int !hig, Random.int !len)
     and
-        out = (8, 2)
+        out = (Random.int !hig, Random.int !len)
     in
 
     (* SqPrint.print_maze *)
@@ -35,7 +35,7 @@ let main () =
     (* entry !len !hig *)
     let maze = SqMaze.colorize (SqMaze.create !len !hig) !len !hig in
 
-    SqMaze.set_color_at_pos maze (8, 2) 3;
+    (* SqMaze.set_color_at_pos maze (8, 2) 3; *)
     SqSolve.solve maze entry out;
     SqPrint.print_maze maze entry !len !hig;
     ()
