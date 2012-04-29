@@ -71,13 +71,19 @@ struct
         ()
     in
 
+    let case_in_screen pos screen_size =
+      pos < screen_size && pos > -50
+    in
+
     let rec draw =
       function
         | (0, -1)       -> ()
         | (x, -1)       -> draw (x - 1, width - 1)
         | (x, y)        ->
           begin
-            draw_case (x, y);
+            if case_in_screen (Val.Elt.calc_width_pos (x, y) !screen_width !width_begin) !screen_width &&
+              case_in_screen (Val.Elt.calc_high_pos x !screen_high !high_begin) !screen_high then
+              draw_case (x, y);
             draw (x, y - 1)
           end
     in
@@ -179,10 +185,8 @@ struct
     begin
       map_width := Val.Elt.calc_map_width width;
       map_high := Val.Elt.calc_map_high high;
-      high_begin := 0;
-      (* Val.Elt.calc_begin_high ex !screen_high; *)
-      width_begin := 0;
-      (* Val.Elt.calc_begin_width ey !screen_width; *)
+      high_begin := Val.Elt.calc_begin_high ex !screen_high;
+      width_begin := Val.Elt.calc_begin_width ey !screen_width;
       init_sizes (!map_width < !screen_width, !map_high < !screen_high);
       let screen = init_sdl high width
       in
