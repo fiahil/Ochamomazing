@@ -10,7 +10,7 @@ module type MAKEPATHFINDER =
 sig
   type t
 
-  val solve : t -> (int * int) -> (int * int) -> t
+  val solve : t -> (int * int) -> (int * int) -> int -> int -> bool -> t
 end
 
 module MakePathfinder (Val : Maze.MAKEMAZE) : MAKEPATHFINDER
@@ -21,7 +21,7 @@ struct
   type t = Val.maze
 
   module Print = DrawSdl.MakeDraw (Val)
-  let solve maze entry out =
+  let solve maze entry out width high draw_mode =
     let comp_tuple (f1, s1) (f2, s2) =
       ((f1 = f2) && (s1 = s2))
     in
@@ -79,8 +79,9 @@ struct
     let move_path (pos, dir) =
       let value = Val.Elt.get_adj_case pos (Val.Elt.get_dir_pattern dir)
       in
-      if not (Print.print_maze maze entry 20 20 true) then
-        raise Exit;
+      if draw_mode then
+        if not (Print.print_maze maze entry width high true) then
+          raise Exit;
       color_path pos value dir (get_color value, get_color pos)
     in
 
