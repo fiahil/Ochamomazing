@@ -5,7 +5,7 @@
  *)
 
 let idle_func  = ref (fun () -> ())
-let key_func   = ref (fun _ -> ())
+let key_func   = ref (fun _ -> true)
 let mouse_func = ref (fun _ -> ())
 
 let rec loop () =
@@ -23,8 +23,10 @@ let rec loop () =
   and
       key ev =
     begin
-      !key_func ev;
-      aux ()
+      if !key_func ev then
+	aux ()
+      else
+	()
     end
   and
       idle () =
@@ -39,6 +41,7 @@ let rec loop () =
     | None				 -> idle ()
     | Some (Sdlevent.KEYDOWN ev)	 -> key ev
     | Some (Sdlevent.MOUSEBUTTONDOWN ev) -> mouse ev
+    | Some (Sdlevent.QUIT)		 -> ()
     | _					 -> aux ()
 
 let set_mouse_func f =
