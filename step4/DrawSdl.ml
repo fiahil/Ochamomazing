@@ -20,6 +20,9 @@ module MakeDraw (Val : Maze.MAKEMAZE) : MAKEDRAW
 struct
   type t = Val.maze
 
+  let maze_ref		= ref 0
+  let maze_width	= ref 0
+  let maze_high		= ref 0
   let map_high          = ref 0
   let map_width         = ref 0
   let width_begin       = ref 0
@@ -90,6 +93,7 @@ struct
     draw (high - 1, width - 1);
     Sdlvideo.flip screen
 
+(*
   let wait_for_escape screen maze width high =
     let manage_scroll cur max value screen_size =
       if cur + value <= 0 then
@@ -130,11 +134,61 @@ struct
         | _                             -> wait ()
     in
     wait ()
+*)
 
   let init_sdl high width =
     Sdl.init [`VIDEO];
     Sdlkey.enable_key_repeat ();
     Sdlvideo.set_video_mode !screen_width !screen_high [`DOUBLEBUF]
+
+  let main_screen	= ref init_sdl 0 0
+
+  let key_func =
+    let manage_scroll cur max value screen_size =
+      if cur + value <= 0 then
+        0
+      else if cur + value + screen_size >= max then
+        max - screen_size
+      else
+        cur + value
+    in
+
+    function
+      | {keysym=Sdlkey.KEY_ESCAPE}   -> false
+      | {keysym=Sdlkey.KEY_UP}               ->
+	begin
+	  high_begin := manage_scroll !high_begin !map_high 22 !screen_high;
+	  draw_maze !main_screen !maze_ref !maze_width !maze_high;
+	  true
+	end
+      | {keysym=Sdlkey.KEY_DOWN}     ->
+	begin
+	  high_begin := manage_scroll !high_begin !map_high (-22) !screen_high;
+	  draw_maze !main_screen !maze_ref !maze_width !maze_high;
+	  true
+	end
+      | {keysym=Sdlkey.KEY_LEFT}     ->
+	begin
+	  width_begin := manage_scroll !width_begin !map_width 25 !screen_width;
+	  draw_maze !main_screen !maze_ref !maze_width !maze_high;
+	  true
+	end
+      | {keysym=Sdlkey.KEY_RIGHT}    ->
+	begin
+	  width_begin := manage_scroll !width_begin !map_width (-25) !screen_width;
+	  draw_maze !main_screen !maze_ref !maze_width !maze_high;
+	  true
+	end
+      | _                             -> true
+
+  let mouse_func info =
+    Printf.printf "clic at %d -- %d\n" info.mbe_x info.mbe_y
+
+let wait_for_escape =
+    begin
+      Event.set_key_func key_func;
+      Event.set_mouse_func mouse_func
+    end
 
   let init_sizes =
     function
@@ -177,16 +231,17 @@ struct
 
   let print_maze maze (ex, ey) width high =
     begin
+      maze_ref := maze;
+      maze_width := width;
+      maze_high := high;
       map_width := Val.Elt.calc_map_width width;
       map_high := Val.Elt.calc_map_high high;
       high_begin := Val.Elt.calc_begin_high ex !screen_high;
       width_begin := Val.Elt.calc_begin_width ey !screen_width;
       init_sizes (!map_width < !screen_width, !map_high < !screen_high);
-      let screen = init_sdl high width
-      in
-
-      draw_maze screen maze width high;
+      screen := init_sdl high width
+      draw_maze !screen maze width high;
       (* Sdltimer.delay 1000; *)
-      wait_for_escape screen maze width high
+      wait_for_escape ()
     end
 end
