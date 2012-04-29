@@ -9,11 +9,12 @@ NAME	=	step4
 
 ML	=	Case.ml		\
 		Maze.ml		\
+		Event.ml	\
 		DrawSdl.ml	\
 		Pathfinder.ml	\
 		main.ml
 
-MLI	=
+MLI	=	Event.mli
 
 CMO	=	$(ML:.ml=.cmo)
 
@@ -32,7 +33,7 @@ CC	=	ocamlopt
 	$(CC) -I +sdl bigarray.cma sdl.cma sdlloader.cma -o $@		-c $< $(FLAGS)
 
 %.cmi: %.mli
-	$(CC) -o $@	-c $< $(FLAGS)
+	$(CC) -I +sdl -o $@	-c $< $(FLAGS)
 
 all:	.dep $(CMI) $(NAME)
 
