@@ -138,9 +138,12 @@ struct
 	  begin
 	    let new_x = Val.Elt.mouse_real_x y !high_begin !screen_high
 	    in
-	    Val.set_color_at_pos maze (new_x,
-				       (Val.Elt.mouse_real_y x
-					  new_x !width_begin !screen_width)) 1;
+	    let new_y = Val.Elt.mouse_real_y x new_x !width_begin !screen_width
+	    in
+	    if (new_x < high) && (new_y < width) then
+	      ignore (Val.set_color_at_pos maze (new_x, new_y) 3)
+	    else
+	      ();
 	    draw_maze screen maze width high
 	  end
 	     | _ -> ()

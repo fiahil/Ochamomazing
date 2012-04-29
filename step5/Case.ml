@@ -270,9 +270,9 @@ struct
     (22 * x) - mh / 2
 
   let mouse_real_x x high_b s_high =
-    (x - high_b - s_high) / (- 50)
+    (x - high_b - s_high) / (- 22)
 
   let mouse_real_y y x width_b s_width =
-    (y - width_b - s_width) / (- 50)
+    (y - width_b - s_width - ((x mod 2) * 38)) / (-76)
 
 end
