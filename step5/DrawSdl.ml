@@ -10,7 +10,7 @@ module type MAKEDRAW =
 sig
   type t
 
-  val print_maze : t -> (int * int) -> int -> int -> bool -> bool
+  val print_maze : t -> (int * int) -> int -> int -> unit
 end
 
 module MakeDraw (Val : Maze.MAKEMAZE) : MAKEDRAW
@@ -71,19 +71,13 @@ struct
         ()
     in
 
-    let case_in_screen pos screen_size =
-      pos < screen_size && pos > -50
-    in
-
     let rec draw =
       function
         | (0, -1)       -> ()
         | (x, -1)       -> draw (x - 1, width - 1)
         | (x, y)        ->
           begin
-            if case_in_screen (Val.Elt.calc_width_pos (x, y) !screen_width !width_begin) !screen_width &&
-              case_in_screen (Val.Elt.calc_high_pos x !screen_high !high_begin) !screen_high then
-              draw_case (x, y);
+            draw_case (x, y);
             draw (x, y - 1)
           end
     in
@@ -96,70 +90,72 @@ struct
     draw (high - 1, width - 1);
     Sdlvideo.flip screen
 
-  let manage_event event screen maze width high =
-    let manage_scroll cur max value screen_size =
-      if cur + value <= 0 then
-        0
-      else if cur + value + screen_size >= max then
-        max - screen_size
-      else
-        cur + value
-    in
-
-    match event with
-      | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_ESCAPE}   -> false
-      | Sdlevent.QUIT                                 -> false
-      | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_UP}       ->
-        begin
-          high_begin := manage_scroll !high_begin !map_high 22 !screen_high;
-          draw_maze screen maze width high;
-          true
-        end
-      | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_DOWN}     ->
-        begin
-          high_begin := manage_scroll !high_begin !map_high (-22) !screen_high;
-          draw_maze screen maze width high;
-          true
-        end
-      | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_LEFT}     ->
-        begin
-          width_begin := manage_scroll !width_begin !map_width 25 !screen_width;
-          draw_maze screen maze width high;
-          true
-        end
-      | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_RIGHT}    ->
-        begin
-          width_begin := manage_scroll !width_begin !map_width (-25) !screen_width;
-          draw_maze screen maze width high;
-          true
-        end
-      | _                                             -> true
-
   let wait_for_escape screen maze width high =
-    let rec wait () =
-      if manage_event (Sdlevent.wait_event ()) screen maze width high then
-        wait ()
-      else
-        false
-    in
-    wait ()
+    let key_func =
+      let manage_scroll cur max value screen_size =
+	if cur + value <= 0 then
+          0
+	else if cur + value + screen_size >= max then
+          max - screen_size
+	else
+          cur + value
+      in
 
-  let rec poll screen maze width high =
-    let rec aux c =
-      Sdltimer.delay 100;
-      if Sdlevent.has_event () && c then
-        aux (match Sdlevent.poll () with
-          | Some (ev)                       -> manage_event ev screen maze width high
-          | None                            -> true)
-      else
-        c
+      function
+        | {keysym=Sdlkey.KEY_ESCAPE}   -> false
+        | {keysym=Sdlkey.KEY_UP}               ->
+          begin
+            high_begin := manage_scroll !high_begin !map_high 22 !screen_high;
+            draw_maze screen maze width high;
+            true
+          end
+        | {keysym=Sdlkey.KEY_DOWN}     ->
+          begin
+            high_begin := manage_scroll !high_begin !map_high (-22) !screen_high;
+            draw_maze screen maze width high;
+            true
+          end
+        | {keysym=Sdlkey.KEY_LEFT}     ->
+          begin
+            width_begin := manage_scroll !width_begin !map_width 25 !screen_width;
+            draw_maze screen maze width high;
+            true
+          end
+        | {keysym=Sdlkey.KEY_RIGHT}    ->
+          begin
+            width_begin := manage_scroll !width_begin !map_width (-25) !screen_width;
+            draw_maze screen maze width high;
+            true
+          end
+        | _                             -> true
+    and
+	mouse_func =
+      function
+	| {mbe_which = _;
+	   mbe_button = Sdlmouse.BUTTON_RIGHT;
+	   mbe_state = _; mbe_x = x;
+	   mbe_y = y} ->
+	  begin
+	    let new_x = Val.Elt.mouse_real_x y !high_begin !screen_high
+	    in
+	    Val.set_color_at_pos maze (new_x,
+				       (Val.Elt.mouse_real_y x
+					  new_x !width_begin !screen_width)) 1;
+	    draw_maze screen maze width high
+	  end
+	     | _ -> ()
     in
-    aux true
+
+    begin
+      Event.set_key_func key_func;
+      Event.set_mouse_func mouse_func;
+      Event.loop ()
+    end
 
   let init_sdl high width =
-    Sdl.init [`VIDEO];
-    Sdlkey.enable_key_repeat ();
-    Sdlvideo.set_video_mode !screen_width !screen_high [`DOUBLEBUF]
+  Sdl.init [`VIDEO];
+  Sdlkey.enable_key_repeat ();
+  Sdlvideo.set_video_mode !screen_width !screen_high [`DOUBLEBUF]
 
   let init_sizes =
     function
@@ -200,23 +196,20 @@ struct
             width_begin := 0
         end
 
-  let print_maze maze (ex, ey) width high continue =
+  let print_maze maze (ex, ey) width high =
     begin
       map_width := Val.Elt.calc_map_width width;
       map_high := Val.Elt.calc_map_high high;
-      if not (!map_width = 0 || continue) then
-        begin
-          high_begin := Val.Elt.calc_begin_high ex !screen_high;
-          width_begin := Val.Elt.calc_begin_width ey !screen_width
-        end;
+      high_begin := 0;
+      (* Val.Elt.calc_begin_high ex !screen_high; *)
+      width_begin := 0;
+      (* Val.Elt.calc_begin_width ey !screen_width; *)
       init_sizes (!map_width < !screen_width, !map_high < !screen_high);
       let screen = init_sdl high width
       in
 
       draw_maze screen maze width high;
-      if continue then
-        poll screen maze width high
-      else
-        wait_for_escape screen maze width high
+      (* Sdltimer.delay 1000; *)
+      wait_for_escape screen maze width high
     end
 end
