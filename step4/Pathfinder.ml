@@ -79,7 +79,7 @@ struct
     let move_path (pos, dir) =
       let value = Val.Elt.get_adj_case pos (Val.Elt.get_dir_pattern dir)
       in
-      if not (Print.print_maze maze (0, 0) 20 20 true) then
+      if not (Print.print_maze maze entry 20 20 true) then
         raise Exit;
       color_path pos value dir (get_color value, get_color pos)
     in
