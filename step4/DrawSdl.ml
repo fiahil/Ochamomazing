@@ -1,8 +1,11 @@
-(* a virer  *)
+(*
+ * A-Maze-Ing project
+ *
+ * Benjamin Tourou
+ *)
 
 open Sdlevent
 open Sdlkey
-
 module type MAKEDRAW =
 sig
   type t
@@ -98,27 +101,27 @@ struct
     in
 
     let rec wait () =
-      match wait_event () with
-        | KEYDOWN {keysym=KEY_ESCAPE}   -> ()
-        | KEYDOWN {keysym=KEY_UP}               ->
+      match Sdlevent.wait_event () with
+        | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_ESCAPE}   -> ()
+        | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_UP}               ->
           begin
             high_begin := manage_scroll !high_begin !map_high 22 !screen_high;
             draw_maze screen maze width high;
             wait ()
           end
-        | KEYDOWN {keysym=KEY_DOWN}     ->
+        | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_DOWN}     ->
           begin
             high_begin := manage_scroll !high_begin !map_high (-22) !screen_high;
             draw_maze screen maze width high;
             wait ()
           end
-        | KEYDOWN {keysym=KEY_LEFT}     ->
+        | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_LEFT}     ->
           begin
             width_begin := manage_scroll !width_begin !map_width 25 !screen_width;
             draw_maze screen maze width high;
             wait ()
           end
-        | KEYDOWN {keysym=KEY_RIGHT}    ->
+        | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_RIGHT}    ->
           begin
             width_begin := manage_scroll !width_begin !map_width (-25) !screen_width;
             draw_maze screen maze width high;
@@ -126,7 +129,7 @@ struct
           end
         | _                             -> wait ()
     in
-    wait()
+    wait ()
 
   let init_sdl high width =
     Sdl.init [`VIDEO];
@@ -185,7 +188,7 @@ struct
       in
 
       draw_maze screen maze width high;
-      (* Sdltimer.delay 1000 *)
+      (* Sdltimer.delay 1000; *)
       wait_for_escape screen maze width high
     end
 end
