@@ -26,13 +26,13 @@ struct
   let screen_high       = ref 800
 
   let draw_maze screen maze width high =
-
-    let draw_img (x, y) sprite =   (* faire un draw something *)
+    let draw_img (x, y) sprite =
       let position_of_image = Sdlvideo.rect
         (Val.Elt.calc_width_pos (x, y) !screen_width !width_begin)
         (Val.Elt.calc_high_pos x !screen_high !high_begin)
         0 0
       in
+
       Sdlvideo.blit_surface ~dst_rect:position_of_image ~src:sprite ~dst:screen ()
     in
 
