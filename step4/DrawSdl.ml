@@ -204,7 +204,7 @@ struct
     begin
       map_width := Val.Elt.calc_map_width width;
       map_high := Val.Elt.calc_map_high high;
-      if not (!map_width = 0 || continue) then
+      if not (!map_width = 0) then
         begin
           high_begin := Val.Elt.calc_begin_high ex !screen_high;
           width_begin := Val.Elt.calc_begin_width ey !screen_width
