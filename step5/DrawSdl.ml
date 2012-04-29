@@ -130,25 +130,21 @@ struct
         | _                             -> true
     and
 	mouse_func =
-      let real_x x =
-	(x - !high_begin - !screen_high) / (- 50)
-      in
-      let real_y x =
-	(x - !width_begin - !screen_width) / (- 50)
-      in
-	function
-	  | {mbe_which = _; mbe_button = Sdlmouse.BUTTON_RIGHT; mbe_state = _; mbe_x = x; mbe_y = y} ->
-	    begin
-	      print_endline
-		(".:: clic at " ^ (string_of_int y) ^ " -- " ^ (string_of_int x));
-	      print_endline
-		("::: real " ^ (string_of_int (real_x y))
-		 ^ " -- " ^ (string_of_int (real_y x)));
-	      Val.set_color_at_pos maze ((real_x y), (real_y x)) 1;
-	      draw_maze screen maze width high
-	    end
-	  | _ -> ()
-       in
+      function
+	| {mbe_which = _;
+	   mbe_button = Sdlmouse.BUTTON_RIGHT;
+	   mbe_state = _; mbe_x = x;
+	   mbe_y = y} ->
+	  begin
+	    let new_x = Val.Elt.mouse_real_x y !high_begin !screen_high
+	    in
+	    Val.set_color_at_pos maze (new_x,
+				       (Val.Elt.mouse_real_y x
+					  new_x !width_begin !screen_width)) 1;
+	    draw_maze screen maze width high
+	  end
+	     | _ -> ()
+    in
 
     begin
       Event.set_key_func key_func;
@@ -156,11 +152,10 @@ struct
       Event.loop ()
     end
 
-
   let init_sdl high width =
-    Sdl.init [`VIDEO];
-    Sdlkey.enable_key_repeat ();
-    Sdlvideo.set_video_mode !screen_width !screen_high [`DOUBLEBUF]
+  Sdl.init [`VIDEO];
+  Sdlkey.enable_key_repeat ();
+  Sdlvideo.set_video_mode !screen_width !screen_high [`DOUBLEBUF]
 
   let init_sizes =
     function

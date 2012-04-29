@@ -63,6 +63,7 @@ struct
           (ret_current
              (Val.set_color_at_pos maze old 0)
              current, at_right dir, stat current (at_right dir))
+	| (_, 3)	-> ((-42, -42), 0, Val.Elt.Wall)
         | (x, y)        ->
           failwith ("Impossible color pattern: " ^
                        (string_of_int x) ^
@@ -91,8 +92,11 @@ struct
     if comp_tuple entry out then
       maze
     else
-      in_find (entry, 0,
-               (Val.Elt.statement
-                  (Val.get_case_at_pos maze
-                     (Val.set_color_at_pos maze entry 2)) 0))
+      begin
+	ignore (Val.set_color_at_pos maze out 3);
+	in_find (entry, 0,
+		 (Val.Elt.statement
+                    (Val.get_case_at_pos maze
+                       (Val.set_color_at_pos maze entry 2)) 0))
+      end
 end

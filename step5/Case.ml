@@ -35,6 +35,8 @@ sig
   val calc_map_high : int -> int
   val calc_begin_width : int -> int -> int
   val calc_begin_high : int -> int -> int
+  val mouse_real_x : int -> int -> int -> int
+  val mouse_real_y : int -> int -> int -> int -> int
 
 end
 
@@ -135,6 +137,12 @@ struct
 
   let calc_begin_high x mh =
     (x * 50) - mh / 2
+
+  let mouse_real_x x high_b s_high =
+    (x - high_b - s_high) / (- 50)
+
+  let mouse_real_y y x width_b s_width =
+    (y - width_b - s_width) / (- 50)
 
 end
 
@@ -260,5 +268,11 @@ struct
 
   let calc_begin_high x mh =
     (22 * x) - mh / 2
+
+  let mouse_real_x x high_b s_high =
+    (x - high_b - s_high) / (- 50)
+
+  let mouse_real_y y x width_b s_width =
+    (y - width_b - s_width) / (- 50)
 
 end
