@@ -242,10 +242,8 @@ struct
       ignore (Val.set_color_at_pos maze !out 5);
       map_width := Val.Elt.calc_map_width width;
       map_high := Val.Elt.calc_map_high high;
-      high_begin := 0;
-      (* Val.Elt.calc_begin_high ex !screen_high; *)
-      width_begin := 0;
-      (* Val.Elt.calc_begin_width ey !screen_width; *)
+      high_begin := Val.Elt.calc_begin_high ex !screen_high;
+      width_begin := Val.Elt.calc_begin_width ey !screen_width;
       init_sizes (!map_width < !screen_width, !map_high < !screen_high);
       ignore (Player.init maze (ex, ey));
       let screen = init_sdl high width
