@@ -97,7 +97,7 @@ struct
     Sdlvideo.flip screen
 
   let wait_for_escape screen maze width high =
-    let key_func =
+    let rec key_func =
       let manage_scroll cur max value screen_size =
         if cur + value <= 0 then
           0
@@ -146,7 +146,7 @@ struct
             in
             let new_y = Val.Elt.mouse_real_y x new_x !width_begin !screen_width
             in
-            (* faire un player . init pour initialiser la positio`n *)
+
             Val.clear_maze maze;
             ignore (Pathfinder.solve maze (Player.pos ()) (new_x, new_y));
             ignore (Val.set_color_at_pos maze !out 5);
@@ -155,9 +155,20 @@ struct
           end
         | _ -> ()
     and
+	push_explosion maze width high =
+      if (Random.int 5) = 1 then
+	let case = (Random.int width, Random.int high)
+	in
+
+	if (Val.get_color_at_pos maze case) = 1 || (Val.get_color_at_pos maze case) = 0
+	then
+	  ignore (Val.set_color_at_pos maze case 4)
+    and
+
         idle_func () =
       begin
         Player.move maze;
+	push_explosion maze width high;
         draw_maze screen maze width high;
         Sdltimer.delay 200
       end
