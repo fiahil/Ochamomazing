@@ -49,6 +49,24 @@ struct
 		ppos := case;
 		ignore (Val.set_color_at_pos maze !ppos 2)
 	      end
+	    else if Val.get_color_at_pos maze case = 5
+	    then
+	      begin
+		ignore (Val.set_color_at_pos maze !ppos 0);
+		ppos := case;
+		ignore (Val.set_color_at_pos maze !ppos 2);
+		print_endline ".:: Congratulation !! You Win !! ::.";
+		raise Exit
+	      end
+	    else if Val.get_color_at_pos maze case = 5
+	    then
+	      begin
+		ignore (Val.set_color_at_pos maze !ppos 0);
+		ppos := case;
+		ignore (Val.set_color_at_pos maze !ppos 2);
+		print_endline ".:: So Sad ... You Died ... ::.";
+		raise Exit
+	      end
 	    else
 	      begin
 		player_dir := !player_dir + 1;

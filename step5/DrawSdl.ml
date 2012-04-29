@@ -138,7 +138,7 @@ struct
         mouse_func =
       function
         | {mbe_which = _;
-           mbe_button = Sdlmouse.BUTTON_LEFT | Sdlmouse.BUTTON_RIGHT;
+           mbe_button = Sdlmouse.BUTTON_RIGHT;
            mbe_state = _; mbe_x = x;
            mbe_y = y} ->
           begin
@@ -146,13 +146,24 @@ struct
             in
             let new_y = Val.Elt.mouse_real_y x new_x !width_begin !screen_width
             in
-            (* faire un player . init pour initialiser la positio`n *)
             Val.clear_maze maze;
             ignore (Pathfinder.solve maze (Player.pos ()) (new_x, new_y));
             ignore (Val.set_color_at_pos maze !out 5);
             Player.move maze;
             draw_maze screen maze width high
           end
+	| {mbe_which = _;
+           mbe_button = Sdlmouse.BUTTON_LEFT;
+           mbe_state = _; mbe_x = x;
+           mbe_y = y} ->
+          let new_x = Val.Elt.mouse_real_x y !high_begin !screen_high
+          in
+          let new_y = Val.Elt.mouse_real_y x new_x !width_begin !screen_width
+          in
+	  if (Val.get_color_at_pos maze (new_x, new_y)) = 4 then
+            ignore (Val.set_color_at_pos maze (new_x, new_y) 0)
+	  else
+	    ()
         | _ -> ()
     and
         idle_func () =
