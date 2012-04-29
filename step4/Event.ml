@@ -34,7 +34,6 @@ let rec loop () =
       !idle_func ();
       aux ()
     end
-
   in
 
   match Sdlevent.poll () with
