@@ -17,7 +17,7 @@ sig
   val empty : Sdlvideo.surface
   val path : Sdlvideo.surface
   val out : Sdlvideo.surface
-  val enter : Sdlvideo.surface
+  val get_player_sprite : int -> Sdlvideo.surface
   val get_sprite : int -> Sdlvideo.surface
   val color : case -> int
   val set_color : case -> int -> case
@@ -50,14 +50,17 @@ struct
 
   let numberSides = 4
 
-  let path   = Sdlloader.load_image "./img/Square/path.png"
-  let enter  = Sdlloader.load_image "./img/Square/enter.png"
-  let out    = Sdlloader.load_image "./img/Square/out.png"
-  let empty  = Sdlloader.load_image "./img/Square/base.jpg"
-  let wall_0 = Sdlloader.load_image "./img/Square/Wall_0.png"
-  let wall_1 = Sdlloader.load_image "./img/Square/Wall_1.png"
-  let wall_2 = Sdlloader.load_image "./img/Square/Wall_2.png"
-  let wall_3 = Sdlloader.load_image "./img/Square/Wall_3.png"
+  let path     = Sdlloader.load_image "./img/Square/path.png"
+  let perso_0  = Sdlloader.load_image "./img/perso_0.png"
+  let perso_1  = Sdlloader.load_image "./img/perso_1.png"
+  let perso_2  = Sdlloader.load_image "./img/perso_2.png"
+  let perso_3  = Sdlloader.load_image "./img/perso_4.png"
+  let out      = Sdlloader.load_image "./img/perso_out.png"
+  let empty    = Sdlloader.load_image "./img/Square/base.jpg"
+  let wall_0   = Sdlloader.load_image "./img/Square/Wall_0.png"
+  let wall_1   = Sdlloader.load_image "./img/Square/Wall_1.png"
+  let wall_2   = Sdlloader.load_image "./img/Square/Wall_2.png"
+  let wall_3   = Sdlloader.load_image "./img/Square/Wall_3.png"
 
   let color c = c.color
 
@@ -120,6 +123,13 @@ struct
       | 3       -> wall_3
       | _       -> failwith "Invalid sprite number asked"
 
+  let get_player_sprite =
+    function
+      | 0       -> perso_0
+      | 1       -> perso_1
+      | 2       -> perso_2
+      | _       -> perso_3
+
   let calc_width_pos (x, y) sc_size sc_begin =
     (sc_size - (50 * y) - 50 + sc_begin)
 
@@ -157,8 +167,11 @@ struct
   let numberSides = 6
 
   let path   = Sdlloader.load_image "./img/Hexa/path.png"
-  let enter  = Sdlloader.load_image "./img/Hexa/enter.png"
-  let out    = Sdlloader.load_image "./img/Hexa/out.png"
+  let perso_0  = Sdlloader.load_image "./img/perso_0.png"
+  let perso_1  = Sdlloader.load_image "./img/perso_1.png"
+  let perso_2  = Sdlloader.load_image "./img/perso_2.png"
+  let perso_3  = Sdlloader.load_image "./img/perso_4.png"
+  let out      = Sdlloader.load_image "./img/perso_out.png"
   let empty  = Sdlloader.load_image "./img/Hexa/base.png"
   let wall_0 = Sdlloader.load_image "./img/Hexa/Wall_0.png"
   let wall_1 = Sdlloader.load_image "./img/Hexa/Wall_1.png"
@@ -250,6 +263,15 @@ struct
       | 4       -> wall_4
       | 5       -> wall_5
       | _       -> failwith "Invalid wall asked."
+
+  let get_player_sprite =
+    function
+      | 0       -> perso_0
+      | 1       -> perso_1
+      | 2       -> perso_1
+      | 3       -> perso_2
+      | 4       -> perso_3
+      | _       -> perso_3
 
   let calc_width_pos (x, y) sc_size sc_begin =
     (sc_size - (76 * y) - 90 + sc_begin + (x mod 2) * 38)
