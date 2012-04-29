@@ -135,7 +135,7 @@ struct
         mouse_func =
       function
 	| {mbe_which = _;
-	   mbe_button = Sdlmouse.BUTTON_LEFT;
+	   mbe_button = Sdlmouse.BUTTON_LEFT | Sdlmouse.BUTTON_RIGHT;
 	   mbe_state = _; mbe_x = x;
 	   mbe_y = y} ->
 	  begin
@@ -144,8 +144,8 @@ struct
 	    let new_y = Val.Elt.mouse_real_y x new_x !width_begin !screen_width
 	    in
 	    (* faire un player . init pour initialiser la positio`n *)
-	    Val.clear maze;
-	    Pathfinder.solve maze Player.pos (new_x, new_y);
+	    Val.clear_maze maze;
+	    ignore (Pathfinder.solve maze (Player.pos ()) (new_x, new_y));
 	    Player.move maze;
             draw_maze screen maze width high
 	  end
@@ -154,7 +154,8 @@ struct
 	idle_func () =
       begin
 	Player.move maze;
-        draw_maze screen maze width high
+        draw_maze screen maze width high;
+	Sdltimer.delay 200
       end
     in
 
@@ -218,7 +219,7 @@ struct
       width_begin := 0;
       (* Val.Elt.calc_begin_width ey !screen_width; *)
       init_sizes (!map_width < !screen_width, !map_high < !screen_high);
-      Player.init maze (ex, ey);
+      ignore (Player.init maze (ex, ey));
       let screen = init_sdl high width
       in
 

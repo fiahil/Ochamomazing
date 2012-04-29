@@ -11,8 +11,8 @@ ML	=	Case.ml		\
 		Maze.ml		\
 		Player.ml	\
 		Event.ml	\
-		DrawSdl.ml	\
 		Pathfinder.ml	\
+		DrawSdl.ml	\
 		main.ml
 
 MLI	=	Event.mli

@@ -50,7 +50,7 @@ struct
 
   let numberSides = 4
 
-  let path     = Sdlloader.load_image "./img/Square/path.png"
+  let path     = Sdlloader.load_image "./img/perso_path.png"
   let perso_0  = Sdlloader.load_image "./img/perso_0.png"
   let perso_1  = Sdlloader.load_image "./img/perso_1.png"
   let perso_2  = Sdlloader.load_image "./img/perso_2.png"
@@ -166,7 +166,7 @@ struct
 
   let numberSides = 6
 
-  let path   = Sdlloader.load_image "./img/Hexa/path.png"
+  let path   = Sdlloader.load_image "./img/perso_path.png"
   let perso_0  = Sdlloader.load_image "./img/perso_0.png"
   let perso_1  = Sdlloader.load_image "./img/perso_1.png"
   let perso_2  = Sdlloader.load_image "./img/perso_2.png"
