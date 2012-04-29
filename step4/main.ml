@@ -7,6 +7,7 @@
 let len = ref 0
 let hig = ref 0
 let mode= ref 0
+let draw= ref true
 
 module SqMaze  = Maze.MakeMaze (Case.Square)
 module SqPrint = DrawSdl.MakeDraw (SqMaze)
@@ -28,11 +29,15 @@ let selectHexa () =
 let selectSquare () =
   mode := 2
 
+let selectDraw () =
+  draw := false
+
 let main () =
   let _ = Arg.parse
     [("--square", Arg.Unit selectSquare, "Select Square mode");
-     ("--hexagon", Arg.Unit selectHexa, "Select Hexagonal mode")]
-    (selectDim) "usage: X Y <--square | --hexagon>."
+     ("--hexagon", Arg.Unit selectHexa, "Select Hexagonal mode");
+     ("-ddm", Arg.Unit selectDraw, "Disable draw mode")]
+    (selectDim) "usage: X Y <--square | --hexagon> [-ddm]."
   in
 
   if !len > 0 && !hig > 0 && !mode > 0 then
@@ -45,12 +50,14 @@ let main () =
       ignore (SqPrint.print_maze
                 (SqSolve.solve
                    (SqMaze.colorize
-                      (SqMaze.create !len !hig) !len !hig) entry out) entry !len !hig false)
+		      (SqMaze.create !len !hig) !len !hig) entry out !len !hig !draw)
+		entry !len !hig false)
     else
       ignore (HePrint.print_maze
                 (HeSolve.solve
-                   (HeMaze.colorize
-                      (HeMaze.create !len !hig) !len !hig) entry out) entry !len !hig false)
+		   (HeMaze.colorize
+		      (HeMaze.create !len !hig) !len !hig) entry out !len !hig !draw)
+		entry !len !hig false)
   else if !mode = 0 then
     prerr_endline "Bad arguments. No mode selected."
   else
