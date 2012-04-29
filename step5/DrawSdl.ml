@@ -67,7 +67,7 @@ struct
         Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:(Val.Elt.get_player_sprite (Player.dir ())) ~dst:screen ()
       else if Val.get_color_at_pos maze (x, y) = 5 then
         Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.out ~dst:screen ()
-      else if Val.get_color_at_pos maze (x, y) = 4 then
+      else if Val.get_color_at_pos maze (x, y) = 4 || Val.get_color_at_pos maze (x, y) = 6 then
         Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.bomb ~dst:screen ()
       else if Val.get_color_at_pos maze (x, y) = 1 then
         Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.path ~dst:screen ()
@@ -146,11 +146,14 @@ struct
             in
             let new_y = Val.Elt.mouse_real_y x new_x !width_begin !screen_width
             in
-            Val.clear_maze maze;
-            ignore (Pathfinder.solve maze (Player.pos ()) (new_x, new_y));
-            ignore (Val.set_color_at_pos maze !out 5);
-            Player.move maze;
-            draw_maze screen maze width high
+	    if (new_y < width) && (new_x < high) then
+	      begin
+		Val.clear_maze maze;
+		ignore (Pathfinder.solve maze (Player.pos ()) (new_x, new_y));
+		ignore (Val.set_color_at_pos maze !out 5);
+		Player.move maze
+	      end;
+	    draw_maze screen maze width high
           end
 	| {mbe_which = _;
            mbe_button = Sdlmouse.BUTTON_LEFT;
@@ -160,7 +163,7 @@ struct
           in
           let new_y = Val.Elt.mouse_real_y x new_x !width_begin !screen_width
           in
-	  if (Val.get_color_at_pos maze (new_x, new_y)) = 4 then
+	  if (new_y < width) && (new_x < high) && ((Val.get_color_at_pos maze (new_x, new_y)) = 4) then
             ignore (Val.set_color_at_pos maze (new_x, new_y) 0)
 	  else
 	    ()
