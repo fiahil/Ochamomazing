@@ -48,9 +48,7 @@ struct
           begin
             if (Val.Elt.statement (Val.get_case_at_pos maze (x, y)) n == Val.Elt.Wall)
             then
-              draw_img (x, y) (Val.Elt.get_sprite n)
-            else
-              ();
+              draw_img (x, y) (Val.Elt.get_sprite n);
             manage_draw_walls (x, y) (n - 1)
           end
     in
@@ -66,10 +64,14 @@ struct
       manage_draw_walls (x, y) (Val.Elt.numberSides - 1);
       if Val.get_color_at_pos maze (x, y) = 2 then
         Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:(Val.Elt.get_player_sprite 0) ~dst:screen ()
-      else if Val.get_color_at_pos maze (x, y) = 3 then
+      else if Val.get_color_at_pos maze (x, y) = 5 then
         Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.out ~dst:screen ()
-      else if Val.get_color_at_pos maze (x, y) != 0 then
+      else if Val.get_color_at_pos maze (x, y) = 4 then
+        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.bomb ~dst:screen ()
+      else if Val.get_color_at_pos maze (x, y) = 1 then
         Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.path ~dst:screen ()
+      else if Val.get_color_at_pos maze (x, y) = 3 then
+        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.goal ~dst:screen ()
       else
         ()
     in
@@ -134,28 +136,28 @@ struct
     and
         mouse_func =
       function
-	| {mbe_which = _;
-	   mbe_button = Sdlmouse.BUTTON_LEFT | Sdlmouse.BUTTON_RIGHT;
-	   mbe_state = _; mbe_x = x;
-	   mbe_y = y} ->
-	  begin
-	    let new_x = Val.Elt.mouse_real_x y !high_begin !screen_high
-	    in
-	    let new_y = Val.Elt.mouse_real_y x new_x !width_begin !screen_width
-	    in
-	    (* faire un player . init pour initialiser la positio`n *)
-	    Val.clear_maze maze;
-	    ignore (Pathfinder.solve maze (Player.pos ()) (new_x, new_y));
-	    Player.move maze;
+        | {mbe_which = _;
+           mbe_button = Sdlmouse.BUTTON_LEFT | Sdlmouse.BUTTON_RIGHT;
+           mbe_state = _; mbe_x = x;
+           mbe_y = y} ->
+          begin
+            let new_x = Val.Elt.mouse_real_x y !high_begin !screen_high
+            in
+            let new_y = Val.Elt.mouse_real_y x new_x !width_begin !screen_width
+            in
+            (* faire un player . init pour initialiser la positio`n *)
+            Val.clear_maze maze;
+            ignore (Pathfinder.solve maze (Player.pos ()) (new_x, new_y));
+            Player.move maze;
             draw_maze screen maze width high
-	  end
-	     | _ -> ()
+          end
+        | _ -> ()
     and
-	idle_func () =
+        idle_func () =
       begin
-	Player.move maze;
+        Player.move maze;
         draw_maze screen maze width high;
-	Sdltimer.delay 200
+        Sdltimer.delay 200
       end
     in
 

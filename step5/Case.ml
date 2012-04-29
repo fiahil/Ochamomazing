@@ -16,7 +16,10 @@ sig
   val numberSides : int
   val empty : Sdlvideo.surface
   val path : Sdlvideo.surface
+  val entry : Sdlvideo.surface
   val out : Sdlvideo.surface
+  val bomb : Sdlvideo.surface
+  val goal : Sdlvideo.surface
   val get_player_sprite : int -> Sdlvideo.surface
   val get_sprite : int -> Sdlvideo.surface
   val color : case -> int
@@ -51,11 +54,14 @@ struct
   let numberSides = 4
 
   let path     = Sdlloader.load_image "./img/perso_path.png"
+  let entry    = Sdlloader.load_image "./img/Square/enter.png"
+  let out      = Sdlloader.load_image "./img/Square/out.png"
+  let bomb     = Sdlloader.load_image "./img/player_bomb.png"
   let perso_0  = Sdlloader.load_image "./img/perso_0.png"
   let perso_1  = Sdlloader.load_image "./img/perso_1.png"
   let perso_2  = Sdlloader.load_image "./img/perso_2.png"
   let perso_3  = Sdlloader.load_image "./img/perso_4.png"
-  let out      = Sdlloader.load_image "./img/perso_out.png"
+  let goal     = Sdlloader.load_image "./img/perso_out.png"
   let empty    = Sdlloader.load_image "./img/Square/base.jpg"
   let wall_0   = Sdlloader.load_image "./img/Square/Wall_0.png"
   let wall_1   = Sdlloader.load_image "./img/Square/Wall_1.png"
@@ -167,11 +173,14 @@ struct
   let numberSides = 6
 
   let path   = Sdlloader.load_image "./img/perso_path.png"
+  let entry  = Sdlloader.load_image "./img/Hexa/enter.png"
+  let out    = Sdlloader.load_image "./img/Hexa/out.png"
+  let bomb     = Sdlloader.load_image "./img/player_bomb.png"
   let perso_0  = Sdlloader.load_image "./img/perso_0.png"
   let perso_1  = Sdlloader.load_image "./img/perso_1.png"
   let perso_2  = Sdlloader.load_image "./img/perso_2.png"
   let perso_3  = Sdlloader.load_image "./img/perso_4.png"
-  let out      = Sdlloader.load_image "./img/perso_out.png"
+  let goal     = Sdlloader.load_image "./img/perso_out.png"
   let empty  = Sdlloader.load_image "./img/Hexa/base.png"
   let wall_0 = Sdlloader.load_image "./img/Hexa/Wall_0.png"
   let wall_1 = Sdlloader.load_image "./img/Hexa/Wall_1.png"
