@@ -151,7 +151,8 @@ struct
         | (_, -1)       -> ()
         | (x, y)        ->
           begin
-            ignore (set_color_at_pos maze (x, y) 0);
+            if Val.color (get_case_at_pos maze (x, y)) != 4 then
+              ignore (set_color_at_pos maze (x, y) 0);
             clear_line (x, y - 1)
           end
     in
