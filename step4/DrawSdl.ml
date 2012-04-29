@@ -89,10 +89,12 @@ struct
 
   let wait_for_escape screen maze width high =
     let manage_scroll cur max value screen_size =
-      if max - (cur + value) >= screen_size && (cur + value) >= 0 then
-        cur + value
+      if cur + value <= 0 then
+        0
+      else if cur + value + screen_size >= max then
+        max - screen_size
       else
-        cur
+        cur + value
     in
 
     let rec wait () =
@@ -100,13 +102,13 @@ struct
         | KEYDOWN {keysym=KEY_ESCAPE}   -> ()
         | KEYDOWN {keysym=KEY_UP}               ->
           begin
-            high_begin := manage_scroll !high_begin !map_high 25 !screen_high;
+            high_begin := manage_scroll !high_begin !map_high 22 !screen_high;
             draw_maze screen maze width high;
             wait ()
           end
         | KEYDOWN {keysym=KEY_DOWN}     ->
           begin
-            high_begin := manage_scroll !high_begin !map_high (-25) !screen_high;
+            high_begin := manage_scroll !high_begin !map_high (-22) !screen_high;
             draw_maze screen maze width high;
             wait ()
           end
@@ -146,6 +148,8 @@ struct
           width_begin := 0;
           if (!high_begin > !map_high - !screen_high) then
             high_begin := !map_high - !screen_high
+          else if (!high_begin < 0) then
+            high_begin := 0
         end
       | (false, true)   ->
         begin
@@ -153,21 +157,29 @@ struct
           high_begin := 0;
           if (!width_begin > !map_width - !screen_width) then
             width_begin := !map_width - !screen_width
+          else if (!width_begin < 0) then
+            high_begin := 0
         end
       | _                       ->
         begin
           if (!high_begin > !map_high - !screen_high) then
-            high_begin := !map_high - !screen_high;
+            high_begin := !map_high - !screen_high
+          else if (!high_begin < 0) then
+            high_begin := 0;
           if (!width_begin > !map_width - !screen_width) then
             width_begin := !map_width - !screen_width
+          else if (!width_begin < 0) then
+            width_begin := 0
         end
 
   let print_maze maze (ex, ey) width high =
     begin
       map_width := Val.Elt.calc_map_width width;
       map_high := Val.Elt.calc_map_high high;
-      high_begin := Val.Elt.calc_begin_high ex;
-      width_begin := Val.Elt.calc_begin_width ey;
+      high_begin := 0;
+      (* Val.Elt.calc_begin_high ex !screen_high; *)
+      width_begin := 0;
+      (* Val.Elt.calc_begin_width ey !screen_width; *)
       init_sizes (!map_width < !screen_width, !map_high < !screen_high);
       let screen = init_sdl high width
       in
