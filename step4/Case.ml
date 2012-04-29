@@ -33,6 +33,9 @@ sig
   val calc_high_pos : int -> int -> int -> int
   val calc_map_width : int -> int
   val calc_map_high : int -> int
+  val calc_begin_width : int -> int -> int
+  val calc_begin_high : int -> int -> int
+
 end
 
 module Square : CASE =
@@ -126,6 +129,12 @@ struct
 
   let calc_map_high high =
     50 * high
+
+  let calc_begin_width y mw =
+    (y * 50) - mw / 2
+
+  let calc_begin_high x mh =
+    (x * 50) - mh / 2
 
 end
 
@@ -245,4 +254,11 @@ struct
 
   let calc_map_high high =
     22 * (high + 1)
+
+  let calc_begin_width y mw =
+    (80 * y) - mw / 2
+
+  let calc_begin_high x mh =
+    (22 * x) - mh / 2
+
 end
