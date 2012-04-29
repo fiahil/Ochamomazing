@@ -97,33 +97,37 @@ struct
     in
 
     let rec wait () =
-      match Sdlevent.wait_event () with
-        | Sdlevent.KEYDOWN {Sdlevent.keysym = Sdlkey.KEY_ESCAPE}	-> ()
-        | Sdlevent.KEYDOWN {Sdlevent.keysym = Sdlkey.KEY_UP}		->
-          begin
-	    high_begin := manage_scroll !high_begin !map_high 25 !screen_high;
-	    draw_maze screen maze width high;
-	    wait ()
-          end
-        | Sdlevent.KEYDOWN {Sdlevent.keysym = Sdlkey.KEY_DOWN}		->
-          begin
-	    high_begin := manage_scroll !high_begin !map_high (-25) !screen_high;
-	    draw_maze screen maze width high;
-	    wait ()
-          end
-        | Sdlevent.KEYDOWN {Sdlevent.keysym = Sdlkey.KEY_LEFT}		->
-          begin
-	    width_begin := manage_scroll !width_begin !map_width 25 !screen_width;
-	    draw_maze screen maze width high;
-	    wait ()
-          end
-        | Sdlevent.KEYDOWN {Sdlevent.keysym = Sdlkey.KEY_RIGHT}		->
-          begin
-	    width_begin := manage_scroll !width_begin !map_width (-25) !screen_width;
-	    draw_maze screen maze width high;
-	    wait ()
-          end
-        | _								-> wait ()
+      match Sdlevent.poll () with
+	| None							-> wait ()
+	| Some (Sdlevent.KEYDOWN ev | Sdlevent.KEYUP ev)	->
+	  (match ev with
+            | {Sdlevent.keysym = Sdlkey.KEY_ESCAPE}	-> ()
+            | {Sdlevent.keysym = Sdlkey.KEY_UP}		->
+              begin
+		high_begin := manage_scroll !high_begin !map_high 25 !screen_high;
+		draw_maze screen maze width high;
+		wait ()
+              end
+            | {Sdlevent.keysym = Sdlkey.KEY_DOWN}		->
+              begin
+		high_begin := manage_scroll !high_begin !map_high (-25) !screen_high;
+		draw_maze screen maze width high;
+		wait ()
+              end
+            | {Sdlevent.keysym = Sdlkey.KEY_LEFT}		->
+              begin
+		width_begin := manage_scroll !width_begin !map_width 25 !screen_width;
+		draw_maze screen maze width high;
+		wait ()
+              end
+            | {Sdlevent.keysym = Sdlkey.KEY_RIGHT}		->
+              begin
+		width_begin := manage_scroll !width_begin !map_width (-25) !screen_width;
+		draw_maze screen maze width high;
+		wait ()
+              end
+            | _								-> wait ())
+	| _							-> wait ()
     in
     wait ()
 
