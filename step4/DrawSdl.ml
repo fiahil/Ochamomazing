@@ -166,8 +166,8 @@ struct
     begin
       map_width := Val.Elt.calc_map_width width;
       map_high := Val.Elt.calc_map_high high;
-      high_begin := Val.Elt.calc_begin_width ey;
-      width_begin := Val.Elt.calc_begin_high ex;
+      high_begin := Val.Elt.calc_begin_high ex;
+      width_begin := Val.Elt.calc_begin_width ey;
       init_sizes (!map_width < !screen_width, !map_high < !screen_high);
       let screen = init_sdl high width
       in
