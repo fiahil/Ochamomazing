@@ -92,6 +92,7 @@ struct
       let clear = Sdlvideo.rect 0 0 !screen_width !screen_high in
       Sdlvideo.fill_rect ~rect: clear screen (Sdlvideo.map_RGB screen Sdlvideo.black);
     in
+
     clear_screen;
     draw (high - 1, width - 1);
     Sdlvideo.flip screen
@@ -109,7 +110,7 @@ struct
 
       function
         | {keysym=Sdlkey.KEY_ESCAPE}   -> false
-        | {keysym=Sdlkey.KEY_UP}               ->
+        | {keysym=Sdlkey.KEY_UP}       ->
           begin
             high_begin := manage_scroll !high_begin !map_high 22 !screen_high;
             draw_maze screen maze width high;
@@ -144,8 +145,10 @@ struct
           begin
             let new_x = Val.Elt.mouse_real_x y !high_begin !screen_high
             in
+
             let new_y = Val.Elt.mouse_real_y x new_x !width_begin !screen_width
             in
+
 	    if (new_y < width) && (new_x < high) then
 	      begin
 		Val.clear_maze maze;
@@ -161,8 +164,10 @@ struct
            mbe_y = y} ->
           let new_x = Val.Elt.mouse_real_x y !high_begin !screen_high
           in
+
           let new_y = Val.Elt.mouse_real_y x new_x !width_begin !screen_width
           in
+
 	  if (new_y < width) && (new_x < high) && ((Val.get_color_at_pos maze (new_x, new_y)) = 4) then
             ignore (Val.set_color_at_pos maze (new_x, new_y) 0)
 	  else
@@ -253,7 +258,6 @@ struct
       in
 
       draw_maze screen maze width high;
-      (* Sdltimer.delay 1000; *)
       wait_for_escape screen maze width high
     end
 end
