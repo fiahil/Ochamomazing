@@ -52,21 +52,27 @@ struct
     let color_path old current dir =
       function
         | (0, _)        ->
-          (test_end
-             (Val.set_color_at_pos maze current 1)
-             (comp_tuple current out), at_right dir, stat current (at_right dir))
+	  begin
+            (Val.set_color_at_pos maze current 1);
+            (test_end current
+	       (comp_tuple current out), at_right dir, stat current (at_right dir))
+	  end
         | (4, 1)        ->
-          (test_end
-             (Val.set_color_at_pos maze current 6)
-	     (comp_tuple current out), at_right dir, stat current (at_right dir))
+	  begin
+            (Val.set_color_at_pos maze current 6);
+            (test_end current
+	       (comp_tuple current out), at_right dir, stat current (at_right dir))
+	  end
 	| (_, 6)        ->
-          (ret_current
-             (Val.set_color_at_pos maze old 4)
-             current, at_right dir, stat current (at_right dir))
+	  begin
+            (Val.set_color_at_pos maze old 4);
+            (current, at_right dir, stat current (at_right dir))
+	  end
         | (_, 1)        ->
-          (ret_current
-             (Val.set_color_at_pos maze old 0)
-             current, at_right dir, stat current (at_right dir))
+	  begin
+            (Val.set_color_at_pos maze old 0);
+            (current, at_right dir, stat current (at_right dir))
+	  end
         | _        -> (current, at_right dir, stat current (at_right dir))
     in
 
@@ -91,8 +97,11 @@ struct
     if comp_tuple entry out then
       maze
     else
-      in_find (entry, 0,
-               (Val.Elt.statement
-                  (Val.get_case_at_pos maze
-                     (Val.set_color_at_pos maze entry 2)) 0))
+      begin
+	(Val.set_color_at_pos maze entry 2);
+	in_find (entry, 0,
+		 (Val.Elt.statement
+                    (Val.get_case_at_pos maze
+                       entry) 0))
+      end
 end
