@@ -10,7 +10,7 @@ module type MAKEDRAW =
 sig
   type t
 
-  val print_maze : t -> (int * int) -> int -> int -> unit
+  val print_maze : t -> (int * int) -> int -> int -> bool -> bool
 end
 
 module MakeDraw (Val : Maze.MAKEMAZE) : MAKEDRAW
@@ -108,8 +108,9 @@ struct
 
     let rec wait () =
       match Sdlevent.wait_event () with
-        | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_ESCAPE}   -> ()
-        | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_UP}               ->
+        | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_ESCAPE}   -> false
+        | Sdlevent.QUIT                                 -> false
+        | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_UP}       ->
           begin
             high_begin := manage_scroll !high_begin !map_high 22 !screen_high;
             draw_maze screen maze width high;
@@ -133,9 +134,23 @@ struct
             draw_maze screen maze width high;
             wait ()
           end
-        | _                             -> wait ()
+        | _                                             -> wait ()
     in
     wait ()
+
+  let rec poll c =
+    Sdltimer.delay 100;
+    if Sdlevent.has_event () && c then
+      poll (match Sdlevent.poll () with
+        | Some (Sdlevent.KEYDOWN ev)      ->
+          (match ev with
+            | {keysym=Sdlkey.KEY_ESCAPE}  -> false
+            | _                           -> true)
+        | Some (Sdlevent.QUIT)            -> false
+        | None                            -> true
+        | _                               -> true)
+    else
+      c
 
   let init_sdl high width =
     Sdl.init [`VIDEO];
@@ -181,7 +196,7 @@ struct
             width_begin := 0
         end
 
-  let print_maze maze (ex, ey) width high =
+  let print_maze maze (ex, ey) width high continue =
     begin
       map_width := Val.Elt.calc_map_width width;
       map_high := Val.Elt.calc_map_high high;
@@ -192,7 +207,9 @@ struct
       in
 
       draw_maze screen maze width high;
-      (* Sdltimer.delay 1000; *)
-      wait_for_escape screen maze width high
+      if continue then
+        poll true
+      else
+        wait_for_escape screen maze width high
     end
 end

@@ -20,6 +20,7 @@ module MakePathfinder (Val : Maze.MAKEMAZE) : MAKEPATHFINDER
 struct
   type t = Val.maze
 
+  module Print = DrawSdl.MakeDraw (Val)
   let solve maze entry out =
     let comp_tuple (f1, s1) (f2, s2) =
       ((f1 = f2) && (s1 = s2))
@@ -77,15 +78,16 @@ struct
     let move_path (pos, dir) =
       let value = Val.Elt.get_adj_case pos (Val.Elt.get_dir_pattern dir)
       in
-
+      if not (Print.print_maze maze value 20 20 true) then
+        raise Exit;
       color_path pos value dir (get_color value, get_color pos)
     in
 
     let rec in_find =
       function
-        | ((-42, -42), _, _)		-> maze
-        | (current, dir, Val.Elt.Door)	-> in_find (move_path (current, dir))
-        | (current, dir, _)		-> in_find (current, at_left dir, stat current (at_left dir))
+        | ((-42, -42), _, _)            -> maze
+        | (current, dir, Val.Elt.Door)  -> in_find (move_path (current, dir))
+        | (current, dir, _)             -> in_find (current, at_left dir, stat current (at_left dir))
     in
 
     if comp_tuple entry out then

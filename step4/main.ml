@@ -42,15 +42,15 @@ let main () =
     in
 
     if !mode = 2 then
-      SqPrint.print_maze
-        (SqSolve.solve
-           (SqMaze.colorize
-              (SqMaze.create !len !hig) !len !hig) entry out) entry !len !hig
+      ignore (SqPrint.print_maze
+                (SqSolve.solve
+                   (SqMaze.colorize
+                      (SqMaze.create !len !hig) !len !hig) entry out) entry !len !hig false)
     else
-      HePrint.print_maze
-        (HeSolve.solve
-           (HeMaze.colorize
-              (HeMaze.create !len !hig) !len !hig) entry out) entry !len !hig
+      ignore (HePrint.print_maze
+                (HeSolve.solve
+                   (HeMaze.colorize
+                      (HeMaze.create !len !hig) !len !hig) entry out) entry !len !hig false)
   else if !mode = 0 then
     prerr_endline "Bad arguments. No mode selected."
   else
