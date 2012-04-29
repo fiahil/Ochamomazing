@@ -43,14 +43,14 @@ let main () =
 
     if !mode = 2 then
       SqPrint.print_maze
-	(SqSolve.solve
-	   (SqMaze.colorize
-	      (SqMaze.create !len !hig) !len !hig) entry out) entry !len !hig
+        (SqSolve.solve
+           (SqMaze.colorize
+              (SqMaze.create !len !hig) !len !hig) entry out) entry !len !hig
     else
       HePrint.print_maze
-	(HeSolve.solve
-	   (HeMaze.colorize
-	      (HeMaze.create !len !hig) !len !hig) entry out) entry !len !hig
+        (HeSolve.solve
+           (HeMaze.colorize
+              (HeMaze.create !len !hig) !len !hig) entry out) entry !len !hig
   else if !mode = 0 then
     prerr_endline "Bad arguments. No mode selected."
   else
@@ -65,5 +65,5 @@ let _ =
       prerr_endline ("Cannot transform characters into numbers.")
     | Failure "Invalid wall combination"        ->
       prerr_endline "Maze too small."
-    | _						->
+    | _                                         ->
       prerr_endline ("An error occured.")

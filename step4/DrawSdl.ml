@@ -4,6 +4,8 @@
  * Benjamin Tourou
  *)
 
+open Sdlevent
+open Sdlkey
 module type MAKEDRAW =
 sig
   type t
@@ -90,44 +92,42 @@ struct
 
   let wait_for_escape screen maze width high =
     let manage_scroll cur max value screen_size =
-      if max - (cur + value) >= screen_size && (cur + value) >= 0 then
-        cur + value
+      if cur + value <= 0 then
+        0
+      else if cur + value + screen_size >= max then
+        max - screen_size
       else
-        cur
+        cur + value
     in
 
     let rec wait () =
-      match Sdlevent.poll () with
-	| None							-> wait ()
-	| Some (Sdlevent.KEYDOWN ev | Sdlevent.KEYUP ev)	->
-	  (match ev with
-            | {Sdlevent.keysym = Sdlkey.KEY_ESCAPE}	-> ()
-            | {Sdlevent.keysym = Sdlkey.KEY_UP}		->
-              begin
-		high_begin := manage_scroll !high_begin !map_high 25 !screen_high;
-		draw_maze screen maze width high;
-		wait ()
-              end
-            | {Sdlevent.keysym = Sdlkey.KEY_DOWN}		->
-              begin
-		high_begin := manage_scroll !high_begin !map_high (-25) !screen_high;
-		draw_maze screen maze width high;
-		wait ()
-              end
-            | {Sdlevent.keysym = Sdlkey.KEY_LEFT}		->
-              begin
-		width_begin := manage_scroll !width_begin !map_width 25 !screen_width;
-		draw_maze screen maze width high;
-		wait ()
-              end
-            | {Sdlevent.keysym = Sdlkey.KEY_RIGHT}		->
-              begin
-		width_begin := manage_scroll !width_begin !map_width (-25) !screen_width;
-		draw_maze screen maze width high;
-		wait ()
-              end
-            | _								-> wait ())
-	| _							-> wait ()
+      match Sdlevent.wait_event () with
+        | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_ESCAPE}   -> ()
+        | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_UP}               ->
+          begin
+            high_begin := manage_scroll !high_begin !map_high 22 !screen_high;
+            draw_maze screen maze width high;
+            wait ()
+          end
+        | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_DOWN}     ->
+          begin
+            high_begin := manage_scroll !high_begin !map_high (-22) !screen_high;
+            draw_maze screen maze width high;
+            wait ()
+          end
+        | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_LEFT}     ->
+          begin
+            width_begin := manage_scroll !width_begin !map_width 25 !screen_width;
+            draw_maze screen maze width high;
+            wait ()
+          end
+        | Sdlevent.KEYDOWN {keysym=Sdlkey.KEY_RIGHT}    ->
+          begin
+            width_begin := manage_scroll !width_begin !map_width (-25) !screen_width;
+            draw_maze screen maze width high;
+            wait ()
+          end
+        | _                             -> wait ()
     in
     wait ()
 
@@ -151,7 +151,7 @@ struct
           width_begin := 0;
           if (!high_begin > !map_high - !screen_high) then
             high_begin := !map_high - !screen_high
-	  else if (!high_begin < 0) then
+          else if (!high_begin < 0) then
             high_begin := 0
         end
       | (false, true)   ->
@@ -160,18 +160,18 @@ struct
           high_begin := 0;
           if (!width_begin > !map_width - !screen_width) then
             width_begin := !map_width - !screen_width
-	  else if (!width_begin < 0) then
+          else if (!width_begin < 0) then
             high_begin := 0
         end
       | _                       ->
         begin
           if (!high_begin > !map_high - !screen_high) then
             high_begin := !map_high - !screen_high
-	  else if (!high_begin < 0) then
+          else if (!high_begin < 0) then
             high_begin := 0;
           if (!width_begin > !map_width - !screen_width) then
             width_begin := !map_width - !screen_width
-	  else if (!width_begin < 0) then
+          else if (!width_begin < 0) then
             width_begin := 0
         end
 
@@ -179,8 +179,10 @@ struct
     begin
       map_width := Val.Elt.calc_map_width width;
       map_high := Val.Elt.calc_map_high high;
-      high_begin := Val.Elt.calc_begin_high ex !screen_high;
-      width_begin := Val.Elt.calc_begin_width ey !screen_width;
+      high_begin := 0;
+      (* Val.Elt.calc_begin_high ex !screen_high; *)
+      width_begin := 0;
+      (* Val.Elt.calc_begin_width ey !screen_width; *)
       init_sizes (!map_width < !screen_width, !map_high < !screen_high);
       let screen = init_sdl high width
       in
