@@ -69,10 +69,10 @@ let _ =
     main ()
   with
     | Failure "int_of_string"                   ->
-      prerr_endline ("Cannot transform characters into numbers.")
+      prerr_endline "Cannot transform characters into numbers."
     | Failure "Invalid wall combination"        ->
       prerr_endline "Maze too small."
     | Exit					->
       ()
     | _                                         ->
-      prerr_endline ("An error occured.")
+      prerr_endline "An error occured."
