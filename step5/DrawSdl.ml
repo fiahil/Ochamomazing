@@ -20,6 +20,9 @@ module MakeDraw (Val : Maze.MAKEMAZE) : MAKEDRAW
 struct
   type t = Val.maze
 
+  module Player = Player.MakePlayer (Val)
+  module Pathfinder = Pathfinder.MakePathfinder (Val)
+
   let map_high          = ref 0
   let map_width         = ref 0
   let width_begin       = ref 0
@@ -132,7 +135,7 @@ struct
 	mouse_func =
       function
 	| {mbe_which = _;
-	   mbe_button = Sdlmouse.BUTTON_RIGHT;
+	   mbe_button = Sdlmouse.BUTTON_LEFT;
 	   mbe_state = _; mbe_x = x;
 	   mbe_y = y} ->
 	  begin
@@ -140,17 +143,24 @@ struct
 	    in
 	    let new_y = Val.Elt.mouse_real_y x new_x !width_begin !screen_width
 	    in
-	    if (new_x < high) && (new_y < width) then
-	      ignore (Val.set_color_at_pos maze (new_x, new_y) 3)
-	    else
-	      ();
-	    draw_maze screen maze width high
+	    (* faire un player . init pour initialiser la positio`n *)
+	    Val.clear maze;
+	    Pathfinder.solve maze Player.pos (new_x, new_y);
+	    Player.move maze;
+            draw_maze screen maze width high
 	  end
 	     | _ -> ()
+    and
+	idle_func () =
+      begin
+	Player.move maze;
+        draw_maze screen maze width high
+      end
     in
 
     begin
       Event.set_key_func key_func;
+      Event.set_idle_func idle_func;
       Event.set_mouse_func mouse_func;
       Event.loop ()
     end
@@ -208,6 +218,7 @@ struct
       width_begin := 0;
       (* Val.Elt.calc_begin_width ey !screen_width; *)
       init_sizes (!map_width < !screen_width, !map_high < !screen_high);
+      Player.init maze (ex, ey);
       let screen = init_sdl high width
       in
 

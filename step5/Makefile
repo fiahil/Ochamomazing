@@ -5,7 +5,7 @@
 ## Fri Mar 16 2012
 ##
 
-NAME	=	step4
+NAME	=	step5
 
 ML	=	Case.ml		\
 		Maze.ml		\
