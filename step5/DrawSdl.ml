@@ -65,7 +65,7 @@ struct
       draw_img (x, y) Val.Elt.empty;
       manage_draw_walls (x, y) (Val.Elt.numberSides - 1);
       if Val.get_color_at_pos maze (x, y) = 2 then
-        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.enter ~dst:screen ()
+        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:(Val.Elt.get_player_sprite 0) ~dst:screen ()
       else if Val.get_color_at_pos maze (x, y) = 3 then
         Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.out ~dst:screen ()
       else if Val.get_color_at_pos maze (x, y) != 0 then
@@ -96,11 +96,11 @@ struct
   let wait_for_escape screen maze width high =
     let key_func =
       let manage_scroll cur max value screen_size =
-	if cur + value <= 0 then
+        if cur + value <= 0 then
           0
-	else if cur + value + screen_size >= max then
+        else if cur + value + screen_size >= max then
           max - screen_size
-	else
+        else
           cur + value
       in
 
@@ -132,7 +132,7 @@ struct
           end
         | _                             -> true
     and
-	mouse_func =
+        mouse_func =
       function
 	| {mbe_which = _;
 	   mbe_button = Sdlmouse.BUTTON_LEFT;
@@ -166,9 +166,9 @@ struct
     end
 
   let init_sdl high width =
-  Sdl.init [`VIDEO];
-  Sdlkey.enable_key_repeat ();
-  Sdlvideo.set_video_mode !screen_width !screen_high [`DOUBLEBUF]
+    Sdl.init [`VIDEO];
+    Sdlkey.enable_key_repeat ();
+    Sdlvideo.set_video_mode !screen_width !screen_high [`DOUBLEBUF]
 
   let init_sizes =
     function

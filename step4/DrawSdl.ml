@@ -92,6 +92,7 @@ struct
       let clear = Sdlvideo.rect 0 0 !screen_width !screen_high in
       Sdlvideo.fill_rect ~rect: clear screen (Sdlvideo.map_RGB screen Sdlvideo.black);
     in
+
     clear_screen;
     draw (high - 1, width - 1);
     Sdlvideo.flip screen
@@ -149,15 +150,20 @@ struct
       Sdltimer.delay 100;
       if Sdlevent.has_event () && c then
         aux (match Sdlevent.poll () with
-          | Some (ev)                       -> manage_event ev screen maze width high
-          | None                            -> true)
+          | Some (ev)	-> manage_event ev screen maze width high
+          | None	-> true)
       else
         c
     in
+
     aux true
 
   let init_sdl high width =
     Sdl.init [`VIDEO];
+    Sdlevent.disable_events Sdlevent.all_events_mask;
+    Sdlevent.enable_events (Sdlevent.keydown_mask lor
+			      Sdlevent.quit_mask lor
+			      Sdlevent.videoexpose_mask);
     Sdlkey.enable_key_repeat ();
     Sdlvideo.set_video_mode !screen_width !screen_high [`DOUBLEBUF]
 
@@ -167,13 +173,13 @@ struct
         begin
           screen_width := !map_width;
           screen_high  := !map_high;
-          high_begin := 0;
-          width_begin := 0
+          high_begin   := 0;
+          width_begin  := 0
         end
       | (true, false)   ->
         begin
           screen_width := !map_width;
-          width_begin := 0;
+          width_begin  := 0;
           if (!high_begin > !map_high - !screen_high) then
             high_begin := !map_high - !screen_high
           else if (!high_begin < 0) then
