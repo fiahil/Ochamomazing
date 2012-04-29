@@ -56,7 +56,9 @@ struct
              (Val.set_color_at_pos maze current 1)
              (comp_tuple current out), at_right dir, stat current (at_right dir))
         | (4, 1)        ->
-          ((Val.set_color_at_pos maze current 6), at_right dir, stat current (at_right dir))
+          (test_end
+             (Val.set_color_at_pos maze current 6)
+	     (comp_tuple current out), at_right dir, stat current (at_right dir))
 	| (_, 6)        ->
           (ret_current
              (Val.set_color_at_pos maze old 4)
