@@ -29,6 +29,7 @@ struct
   let high_begin        = ref 0
   let screen_width      = ref 1200
   let screen_high       = ref 800
+  let out               = ref (0, 0)
 
   let draw_maze screen maze width high =
     let draw_img (x, y) sprite =
@@ -63,7 +64,7 @@ struct
       draw_img (x, y) Val.Elt.empty;
       manage_draw_walls (x, y) (Val.Elt.numberSides - 1);
       if Val.get_color_at_pos maze (x, y) = 2 then
-        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:(Val.Elt.get_player_sprite 0) ~dst:screen ()
+        Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:(Val.Elt.get_player_sprite (Player.dir ())) ~dst:screen ()
       else if Val.get_color_at_pos maze (x, y) = 5 then
         Sdlvideo.blit_surface ~dst_rect:position_of_path ~src:Val.Elt.out ~dst:screen ()
       else if Val.get_color_at_pos maze (x, y) = 4 then
@@ -148,6 +149,7 @@ struct
             (* faire un player . init pour initialiser la positio`n *)
             Val.clear_maze maze;
             ignore (Pathfinder.solve maze (Player.pos ()) (new_x, new_y));
+            ignore (Val.set_color_at_pos maze !out 5);
             Player.move maze;
             draw_maze screen maze width high
           end
@@ -214,6 +216,8 @@ struct
 
   let print_maze maze (ex, ey) width high =
     begin
+      out := (Random.int high, Random.int width);
+      ignore (Val.set_color_at_pos maze !out 5);
       map_width := Val.Elt.calc_map_width width;
       map_high := Val.Elt.calc_map_high high;
       high_begin := 0;

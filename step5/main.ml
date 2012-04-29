@@ -37,8 +37,6 @@ let main () =
 
   if !len > 0 && !hig > 0 && !mode > 0 then
     let entry = (Random.int !hig, Random.int !len)
-    and
-        out = (Random.int !hig, Random.int !len)
     in
 
     if !mode = 2 then
