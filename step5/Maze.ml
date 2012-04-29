@@ -17,6 +17,7 @@ sig
   val get_case_at_pos : maze -> int * int -> Elt.case
   val set_color_at_pos : maze -> int * int -> int -> int * int
   val get_color_at_pos : maze -> int * int -> int
+  val clear_maze : maze -> unit
 end
 
 module MakeMaze (Val : Case.CASE) : MAKEMAZE
@@ -143,4 +144,27 @@ struct
 
     change_cases (width * high - 1);
     maze
+
+  let clear_maze maze =
+    let rec clear_line =
+      function
+        | (_, -1)       -> ()
+        | (x, y)        ->
+          begin
+            ignore (set_color_at_pos maze (x, y) 0);
+            clear_line (x, y - 1)
+          end
+    in
+
+    let rec clear =
+      function
+        | -1    -> ()
+        | x     ->
+          begin
+            clear_line (x, (Array.length maze.(0)) - 1);
+            clear (x - 1)
+          end
+    in
+    clear (Array.length maze - 1)
+
 end
