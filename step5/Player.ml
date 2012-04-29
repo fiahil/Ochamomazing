@@ -58,7 +58,7 @@ struct
 		print_endline ".:: Congratulation !! You Win !! ::.";
 		raise Exit
 	      end
-	    else if Val.get_color_at_pos maze case = 5
+	    else if Val.get_color_at_pos maze case = 4
 	    then
 	      begin
 		ignore (Val.set_color_at_pos maze !ppos 0);

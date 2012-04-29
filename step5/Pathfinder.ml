@@ -59,10 +59,6 @@ struct
           (ret_current
              (Val.set_color_at_pos maze old 0)
              current, at_right dir, stat current (at_right dir))
-        | (_, 1)        ->
-          (ret_current
-             (Val.set_color_at_pos maze old 0)
-             current, at_right dir, stat current (at_right dir))
         | _        -> (current, at_right dir, stat current (at_right dir))
     in
 
