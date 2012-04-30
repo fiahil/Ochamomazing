@@ -134,13 +134,14 @@ struct
             draw_maze screen maze width high;
             true
           end
-        | _                             -> true
+        | _                            -> true
     and
         mouse_func =
       function
         | {mbe_which = _;
            mbe_button = Sdlmouse.BUTTON_RIGHT;
-           mbe_state = _; mbe_x = x;
+           mbe_state = _;
+	   mbe_x = x;
            mbe_y = y} ->
           begin
             let new_x = Val.Elt.mouse_real_x y !high_begin !screen_high
@@ -153,14 +154,15 @@ struct
 	      begin
 		Val.clear_maze maze;
 		ignore (Pathfinder.solve maze (Player.pos ()) (new_x, new_y));
-		ignore (Val.set_color_at_pos maze !out 5);
+		Val.set_color_at_pos maze !out 5;
 		Player.move maze
 	      end;
 	    draw_maze screen maze width high
           end
 	| {mbe_which = _;
            mbe_button = Sdlmouse.BUTTON_LEFT;
-           mbe_state = _; mbe_x = x;
+           mbe_state = _;
+	   mbe_x = x;
            mbe_y = y} ->
           let new_x = Val.Elt.mouse_real_x y !high_begin !screen_high
           in
@@ -168,10 +170,14 @@ struct
           let new_y = Val.Elt.mouse_real_y x new_x !width_begin !screen_width
           in
 
-	  if (new_y < width) && (new_x < high) && ((Val.get_color_at_pos maze (new_x, new_y)) = 4) then
-            ignore (Val.set_color_at_pos maze (new_x, new_y) 0)
-	  else
-	    ()
+	  if (new_y < width) && (new_x < high)
+	  then
+	    if ((Val.get_color_at_pos maze (new_x, new_y)) = 4) then
+              Val.set_color_at_pos maze (new_x, new_y) 0
+	    else if ((Val.get_color_at_pos maze (new_x, new_y)) = 6) then
+              Val.set_color_at_pos maze (new_x, new_y) 1
+	    else
+	      ()
         | _ -> ()
     and
 	push_explosion maze width high =
@@ -179,9 +185,10 @@ struct
 	let case = (Random.int width, Random.int high)
 	in
 
-	if (Val.get_color_at_pos maze case) = 1 || (Val.get_color_at_pos maze case) = 0
+	if (Val.get_color_at_pos maze case) = 1 ||
+	  (Val.get_color_at_pos maze case) = 0
 	then
-	  ignore (Val.set_color_at_pos maze case 4)
+	  Val.set_color_at_pos maze case 4
     and
 
         idle_func () =
@@ -247,14 +254,15 @@ struct
   let print_maze maze (ex, ey) width high =
     begin
       out := (Random.int high, Random.int width);
-      ignore (Val.set_color_at_pos maze !out 5);
+      Val.set_color_at_pos maze !out 5;
       map_width := Val.Elt.calc_map_width width;
       map_high := Val.Elt.calc_map_high high;
       high_begin := Val.Elt.calc_begin_high ex !screen_high;
       width_begin := Val.Elt.calc_begin_width ey !screen_width;
       init_sizes (!map_width < !screen_width, !map_high < !screen_high);
       ignore (Player.init maze (ex, ey));
-      let screen = init_sdl high width
+      let screen =
+	init_sdl high width
       in
 
       draw_maze screen maze width high;
