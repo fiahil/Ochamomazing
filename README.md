@@ -10,4 +10,4 @@ Steps
 2. Finished
 3. Finished
 4. Finished
-5. In Progress
+5. Finished

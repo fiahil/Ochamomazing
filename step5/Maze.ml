@@ -15,7 +15,7 @@ sig
   val create : int -> int -> maze
   val colorize : maze -> int -> int -> maze
   val get_case_at_pos : maze -> int * int -> Elt.case
-  val set_color_at_pos : maze -> int * int -> int -> int * int
+  val set_color_at_pos : maze -> int * int -> int -> unit
   val get_color_at_pos : maze -> int * int -> int
   val clear_maze : maze -> unit
 end
@@ -60,8 +60,7 @@ struct
     Array.get (Array.get maze x) y
 
   let set_color_at_pos maze (x, y) col =
-    Array.set maze.(x) y (Val.set_color (get_case_at_pos maze (x, y)) col);
-    (x, y)
+    Array.set maze.(x) y (Val.set_color (get_case_at_pos maze (x, y)) col)
 
   let get_color_at_pos maze (x, y) =
     Val.color (Array.get maze.(x) y)
@@ -152,7 +151,7 @@ struct
         | (x, y)        ->
           begin
             if Val.color (get_case_at_pos maze (x, y)) != 4 then
-              ignore (set_color_at_pos maze (x, y) 0);
+              set_color_at_pos maze (x, y) 0;
             clear_line (x, y - 1)
           end
     in
