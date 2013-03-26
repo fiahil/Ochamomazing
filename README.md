@@ -3,11 +3,6 @@ Ochamomazing
 
 An awesome labyrinth game in Ocaml !
 
-============
-Steps
-============
-1. Finished
-2. Finished
-3. Finished
-4. Finished
-5. Finished
+# To people from school
++ Don't try to copy this. This would be a really really bad idea.
++ Do not think about this. I'll be watching you. :)
